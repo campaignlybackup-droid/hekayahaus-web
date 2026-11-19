@@ -32,7 +32,6 @@ const films = [
         </div>
         <span class="label" aria-live="polite" data-filter-count>{projects.length} projects</span>
       </div>
-      <h2 class="sr-only">All projects</h2>
       <div class="work-grid" data-filter-grid>
         {projects.map((p, i) => <ProjectTile project={p} delay={(i % 3) * 80} />)}
       </div>

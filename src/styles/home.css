@@ -542,7 +542,6 @@ a.fi-item:hover {
   overflow: hidden;
 }
 .legacy-lines {
-  perspective: 900px;
   display: grid;
   gap: 0.05em;
   white-space: nowrap;
@@ -553,10 +552,6 @@ a.fi-item:hover {
   line-height: 0.95;
   letter-spacing: -0.045em;
   text-transform: uppercase;
-}
-.legacy-line {
-  transform-origin: 50% 50%;
-  will-change: transform;
 }
 .legacy-line .serif {
   text-transform: none;
@@ -643,11 +638,7 @@ a.fi-item:hover {
   position: relative;
   overflow: hidden;
 }
-.rail {
-  perspective: 1600px;
-}
 .rail-track {
-  transform-style: preserve-3d;
   display: flex;
   gap: clamp(16px, 2vw, 28px);
   padding-inline: var(--gutter);
@@ -764,27 +755,19 @@ a.fi-item:hover {
   position: relative;
   margin-top: 40px;
   aspect-ratio: 16 / 10;
-  perspective: 1400px;
-  perspective-origin: 50% 30%;
-  transform-style: preserve-3d;
 }
 .process-frame {
   position: absolute;
   inset: 0;
   opacity: 0;
   transform: scale(1.04);
-  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
   transition:
     opacity 0.9s var(--e-out),
-    transform 1.2s var(--e-expo),
-    filter 0.9s var(--e-out);
+    transform 1.2s var(--e-out);
 }
 .process-frame.is-active {
   opacity: 1;
   transform: none;
-}
-.process-frames.is-deck .process-frame {
-  opacity: 1;
 }
 .process-bar {
   --p: 0.2;
@@ -962,154 +945,4 @@ a.fi-item:hover {
 }
 .end-inner .cta-actions {
   justify-content: center;
-}
-
-/* ---------- 3D assembly: three pillars → one Haus ---------- */
-.assembly {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(24px, 4vw, 64px);
-  align-items: center;
-  min-height: calc(100vh - var(--nav-h));
-  min-height: calc(100svh - var(--nav-h));
-}
-.assembly > * {
-  min-width: 0;
-}
-.assembly-copy .lead {
-  margin-top: 26px;
-}
-.assembly-list {
-  list-style: none;
-  padding: 0;
-  margin: clamp(28px, 4vw, 48px) 0 0;
-  border-top: 1px solid var(--line);
-}
-.assembly-list li {
-  position: relative;
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  column-gap: 12px;
-  padding: 16px 0 16px 0;
-  border-bottom: 1px solid var(--line);
-  transition: opacity 0.6s var(--e-out);
-}
-.motion .has-haus .assembly-list li:not(.is-on) {
-  opacity: 0.38;
-}
-.assembly-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 1px;
-  width: 100%;
-  background: var(--tungsten);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 0.9s var(--e-expo);
-}
-.assembly-list li.is-focus::before {
-  transform: scaleX(1);
-}
-.assembly-list .num {
-  grid-row: span 2;
-  padding-top: 6px;
-}
-.assembly-name {
-  font-family: var(--f-display);
-  font-weight: 780;
-  font-stretch: 120%;
-  font-size: clamp(1.3rem, 2.2vw, 2rem);
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  line-height: 1.05;
-}
-.assembly-line {
-  font-family: var(--f-serif);
-  font-style: italic;
-  font-size: clamp(1rem, 1.3vw, 1.2rem);
-  color: var(--ivory-2);
-}
-.assembly-list li.is-focus .assembly-line {
-  color: var(--tungsten);
-}
-.assembly-stage {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  max-height: calc(100svh - var(--nav-h) - 48px);
-  width: 100%;
-  justify-self: center;
-  display: grid;
-  place-items: center;
-  border-radius: var(--r-l);
-  background:
-    radial-gradient(50% 50% at 50% 50%, rgba(255, 179, 92, 0.08), transparent 70%),
-    radial-gradient(60% 50% at 30% 80%, rgba(58, 91, 255, 0.1), transparent 70%);
-}
-.assembly-stage::before {
-  /* floor reflection line */
-  content: '';
-  position: absolute;
-  left: 15%;
-  right: 15%;
-  bottom: 9%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 179, 92, 0.45), transparent);
-  filter: blur(0.5px);
-}
-.haus-canvas {
-  position: absolute;
-  inset: -14%;
-  width: 128%;
-  height: 128%;
-  -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
-  pointer-events: none;
-}
-.assembly-fallback {
-  width: 34%;
-  height: auto;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 40px rgba(255, 179, 92, 0.35));
-}
-.has-haus .assembly-fallback {
-  opacity: 0;
-}
-.assembly-caption {
-  position: absolute;
-  left: 50%;
-  bottom: 3%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
-  color: var(--ivory-2);
-}
-.assembly-caption .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--tungsten);
-  box-shadow: 0 0 12px var(--tungsten);
-}
-@media (max-width: 1023px) {
-  .assembly {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-  .assembly-stage {
-    order: -1;
-    max-width: 520px;
-    max-height: none;
-  }
-}
-
-@media (max-width: 700px) {
-  .haus-canvas {
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
 }

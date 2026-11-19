@@ -5,7 +5,6 @@ import Split from '../components/Split.astro';
 import Img from '../components/Img.astro';
 import Icon from '../components/Icon.astro';
 import LogoMarquee from '../components/LogoMarquee.astro';
-import LogoOrbit from '../components/LogoOrbit.astro';
 import Faq from '../components/Faq.astro';
 import { site, pillars, projects, featuredProjectSlugs, processSteps, stats, videos, featuredIn, faq, projectsByPillar, youtubeEmbed } from '../data/site';
 import '../styles/home.css';
@@ -159,26 +158,12 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
     <!-- ======================= PILLARS ======================= -->
     <section class="section pillars" aria-labelledby="pillars-title">
       <div class="container">
-        <div class="assembly" data-assembly>
-          <div class="assembly-copy">
+        <div class="sec-head sec-head--split">
+          <div>
             <p class="eyebrow eyebrow--accent" data-reveal>What we do — Three pillars</p>
             <Split id="pillars-title" lines={['Three pillars.', 'One *Haus.*']} class="h-xxl" />
-            <p class="lead" data-reveal>Everything we do sits under three clear pillars. No fragmented services. No confusion. Just focused power that actually moves the business.</p>
-            <ol class="assembly-list" role="list">
-              {pillars.map((p, i) => (
-                <li data-assembly-item data-reveal style={`--delay:${i * 90}ms`}>
-                  <span class="num">{p.n}</span>
-                  <span class="assembly-name">{p.name}</span>
-                  <span class="assembly-line">{p.line}</span>
-                </li>
-              ))}
-            </ol>
           </div>
-          <div class="assembly-stage" aria-hidden="true">
-            <img class="assembly-fallback" src="/media/brand/h-mark-160.png" alt="" width="145" height="160" loading="lazy" />
-            <canvas class="haus-canvas"></canvas>
-            <span class="assembly-caption label"><span class="dot"></span><span data-assembly-caption>Three pillars</span></span>
-          </div>
+          <p class="lead" data-reveal>Everything we do sits under three clear pillars. No fragmented services. No confusion. Just focused power that actually moves the business.</p>
         </div>
         <div class="pillar-stack">
           {pillars.map((p, i) => {
@@ -312,7 +297,7 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
           <div class="process-frames" aria-hidden="true">
             {processSteps.map((s, i) => (
               <div class:list={['media', 'process-frame', i === 0 && 'is-active']} data-step-img>
-                <Img name={s.image} sizes="(min-width: 1024px) 36vw, 0px" decorative priority={false} />
+                <Img name={s.image} sizes="(min-width: 1024px) 36vw, 0px" decorative />
               </div>
             ))}
             <div class="process-bar" data-step-bar><span></span></div>
@@ -353,7 +338,7 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
           ))}
         </ul>
         <div class="logo-wall" data-reveal>
-          <LogoOrbit />
+          <LogoMarquee label="Selected collaborations" />
         </div>
       </div>
     </section>
