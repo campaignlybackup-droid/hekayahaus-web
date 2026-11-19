@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import LogoMarquee from '../components/LogoMarquee.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { featuredIn, site } from '../data/site';
+const beliefs = [
+  { t: 'People before platforms.', b: 'Behind every business is a person who has taken a risk, invested time and built something they believe in. We never lose sight of that.' },
+  { t: 'Creativity needs direction.', b: 'Beautiful work has its place. But when creativity meets purpose, it becomes far more powerful.' },
+  { t: 'Trust is built in the details.', b: 'Clear communication, realistic expectations, consistency and accountability aren’t extras. They’re the foundation of every good partnership.' },
+  { t: 'Growth is never one-dimensional.', b: 'Marketing, production, technology and business operations should work together. We look beyond individual tasks to understand the bigger opportunity.' },
+  { t: 'Never stop moving forward.', b: 'Markets change. People change. Technology changes. We stay curious, keep learning and keep finding better ways to do things.' },
+];
+---
+<Base
+  title="About HekayaHaus — Beyond Seen. Into Felt. | Creative Media, Marketing & Technology, Dubai"
+  description="HekayaHaus — Hekaya means story, Haus means home. A creative media, marketing and technology haus in Dubai with 200+ client and brand collaborations, including Red Bull, Nike, Lamborghini, EA Sports and Porsche."
+>
+  <PageHero eyebrow="A little about us" title={['We didn’t build', 'HekayaHaus to make', 'more noise. We built', 'it to make things', '*matter.*']} crumbs={[{ name: 'About' }]} wide titleClass="h-xl">
+    <p class="lead">There are businesses with incredible ideas that never get the attention they deserve. Brands with real potential that struggle to find their voice. People with big ambitions who need the right people beside them.</p>
+    <p class="lead">We saw an opportunity to bring creativity, strategy and technology together — not as separate services, but as a better way to help businesses move forward. That’s where HekayaHaus began.</p>
+  </PageHero>
+
+  <section class="section hairline">
+    <div class="container about-story">
+      <div>
+        <p class="eyebrow eyebrow--accent" data-reveal>Our story</p>
+        <Split lines={['Every business has', 'a story. It deserves', 'to be told *right.*']} class="h-l" />
+        <div class="meaning" data-reveal>
+          <div><strong>Hekaya</strong><span>means story.</span></div>
+          <div><strong>Haus</strong><span>means home.</span></div>
+        </div>
+      </div>
+      <div class="body-copy" data-reveal>
+        <p class="lead">Together, they represent what we set out to create: a creative home for ideas, people and businesses ready to become something more.</p>
+        <p>What started with a passion for visual storytelling has grown into a creative media, marketing and technology company working with businesses and recognised brands across different markets.</p>
+        <p><strong>Over 200 client and brand collaborations later,</strong> our perspective remains the same.</p>
+        <p>Good work isn’t about making something look impressive for a moment. It’s about understanding what matters, creating with intention and delivering something that moves the business forward.</p>
+        <p>Today, HekayaHaus brings together creative minds, strategists, marketers, production specialists and technology talent under one roof.</p>
+        <p><strong>And we’re only getting started.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section philosophy surface">
+    <div class="container philosophy-grid">
+      <div>
+        <p class="eyebrow eyebrow--accent" data-reveal>Our philosophy</p>
+        <Split lines={['Beyond seen.', 'Into *felt.*']} class="h-xxl" />
+        <div class="body-copy" data-reveal style="margin-top:36px">
+          <p class="lead"><strong>Being visible is easy. Being remembered is different.</strong></p>
+          <p>We believe the strongest brands don’t just occupy space in someone’s feed, on a screen or across a city. They create a feeling. They build trust. They give people a reason to return.</p>
+          <p>That’s the standard we bring to our work. We want the businesses we work with to be recognised for what they do, remembered for how they make people feel and chosen for the value they bring.</p>
+        </div>
+      </div>
+      <div class="media media--parallax" data-reveal="scale"><Img name="portrait-lightbulb" sizes="(min-width: 860px) 36vw, 100vw" /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow eyebrow--accent" data-reveal>What we believe</p>
+      <Split lines={['Five things we', 'won’t *compromise on.*']} class="h-xl" />
+      <ol class="beliefs" role="list">
+        {beliefs.map((b, i) => (
+          <li data-reveal>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{b.t}</h3>
+            <p>{b.b}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section surface">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Our experience</p>
+          <Split lines={['We’ve worked across', 'more than one kind', 'of *ambition.*']} class="h-xl" />
+        </div>
+        <div class="body-copy" data-reveal>
+          <p>From international brand campaigns and large-scale sporting experiences to growing businesses building their identity, our experience spans different challenges and creative environments.</p>
+          <p>Our work and collaborations have included names such as <strong>Red Bull, Nike, Lamborghini, EA Sports and Porsche</strong>, alongside businesses and brands across the UAE and beyond.</p>
+          <p>We bring those experiences into every new brief — with the understanding that every client deserves attention, regardless of the size of their project.</p>
+          <p>Industry relevance lives inside the work: automotive, sports & motorsport, entertainment, fashion & beauty, hospitality, events, real estate and technology.</p>
+        </div>
+      </div>
+      <div style="margin-top:clamp(48px,6vw,88px)" data-reveal><LogoMarquee label="Selected collaborations" /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Beyond business — featured alumni &amp; entrepreneurship</p>
+          <Split lines={['Building businesses.', 'Encouraging the', '*next generation.*']} class="h-xl" />
+        </div>
+        <div class="body-copy" data-reveal>
+          <p>Our relationship with creativity and entrepreneurship goes beyond the work we deliver for clients.</p>
+          <p>We believe knowledge becomes more valuable when it’s shared, and experience becomes more meaningful when it helps someone else take their first step.</p>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:clamp(40px,5vw,64px)">
+        {featuredIn.map((f, i) => {
+          const inner = (
+            <>
+              <span class="num">{f.kind}</span>
+              <h3 class="h-m">{f.name}</h3>
+              <p>{f.detail}</p>
+              {f.href && <span class="link-arrow" style="margin-top:14px">Read the feature <Icon name="external" /></span>}
+            </>
+          );
+          return f.href ? (
+            <a class="card" href={f.href} target="_blank" rel="noopener" data-reveal style={`--delay:${(i % 2) * 80}ms`}>{inner}</a>
+          ) : (
+            <div class="card" data-reveal style={`--delay:${(i % 2) * 80}ms`}>{inner}</div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="There’s a place for your next big idea here"
+    title={['Your next chapter', 'could start *here.*']}
+    lead="Whether you’re building something new, repositioning an established business, looking to join our team, build a university partnership or collaborate with us — we’d like to hear your story."
+    primary={{ label: 'Meet HekayaHaus', href: '/contact-us' }}
+    secondary={{ label: 'Join the Haus', href: '/careers' }}
+  />
+</Base>

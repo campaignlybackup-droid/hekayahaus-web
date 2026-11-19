@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { site } from '../data/site';
+interface Props { kind: 'privacy' | 'terms' }
+const { kind } = Astro.props;
+const title = kind === 'privacy' ? 'Privacy Policy' : 'Terms & Conditions';
+---
+<Base title={`${title} | HekayaHaus`} description={`${title} for the HekayaHaus website — ${site.legalName}, ${site.location}.`}>
+  <PageHero eyebrow="Legal" title={[title]} crumbs={[{ name: title }]} titleClass="h-xl">
+    <p class="lead">{site.legalName} · {site.location}</p>
+  </PageHero>
+  <section class="section" style="padding-top:0">
+    <div class="container legal">
+      {kind === 'privacy' ? (
+        <>
+          <h2>Information we collect</h2>
+          <p>When you submit an enquiry or a job application we receive the details you provide: for example your name, email address, phone number, the service you are interested in and your message, and — for applications — your CV, portfolio and the information on the form. If you book a call, the booking is handled by Google Calendar under Google’s own terms.</p>
+          <h2>How we use it</h2>
+          <p>We use these details only to respond to your enquiry, to discuss a potential project or to assess your application. Your information stays with our team; we do not sell it.</p>
+          <h2>Analytics</h2>
+          <p>This website may use privacy-friendly, cookieless analytics to understand aggregate traffic and site performance. Embedded videos are served from external players (such as YouTube’s privacy-enhanced mode) only after you press play.</p>
+          <h2>Your choices</h2>
+          <p>To access, correct or delete the information you have sent us, email <a href={`mailto:${site.email}`}>{site.email}</a> (or <a href={`mailto:${site.hrEmail}`}>{site.hrEmail}</a> for applications).</p>
+        </>
+      ) : (
+        <>
+          <h2>Use of this website</h2>
+          <p>This website is operated by {site.legalName}. By using it you agree to use it lawfully and not to interfere with its operation.</p>
+          <h2>Intellectual property</h2>
+          <p>All work, imagery, video, text and branding shown on this website belong to HekayaHaus or to the respective clients and rights holders, and are shown for portfolio purposes. Client names and logos are trademarks of their owners. Nothing may be reproduced without written permission.</p>
+          <h2>No offer</h2>
+          <p>Information on this site is provided for general purposes. Projects, pricing, timelines and media placements are confirmed only in a written proposal and remain subject to availability.</p>
+          <h2>Contact</h2>
+          <p>Questions about these terms: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+        </>
+      )}
+    </div>
+  </section>
+</Base>

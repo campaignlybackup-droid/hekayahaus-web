@@ -1,0 +1,28 @@
+---
+import Split from './Split.astro';
+interface Props { eyebrow: string; title: string[]; crumbs?: { name: string; href?: string }[]; wide?: boolean; titleClass?: string }
+const { eyebrow, title, crumbs = [], wide = false, titleClass = 'h-xxl' } = Astro.props;
+---
+<section class="page-hero" data-glow>
+  <div class="container">
+    {crumbs.length > 0 && (
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        {crumbs.map((c) => (
+          <>
+            <span aria-hidden="true">/</span>
+            {c.href ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}
+          </>
+        ))}
+      </nav>
+    )}
+    <p class="eyebrow eyebrow--accent" data-reveal>{eyebrow}</p>
+    <Split as="h1" lines={title} class:list={[titleClass, 'page-hero-title', wide && 'wide']} />
+    {(Astro.slots.has('default') || Astro.slots.has('aside')) && (
+      <div class="page-hero-body">
+        <div data-reveal style="--delay:200ms"><slot /></div>
+        <div data-reveal style="--delay:320ms"><slot name="aside" /></div>
+      </div>
+    )}
+  </div>
+</section>

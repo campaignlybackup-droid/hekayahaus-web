@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Button from '../../components/Button.astro';
+import Split from '../../components/Split.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { pillars, site } from '../../data/site';
+const imgs: Record<string, string> = { marketing: 'brand-kofo', performance: 'auto-cockpit', growth: 'tech-isometric-2' };
+---
+<Base
+  title="What We Do — Marketing, Performance & Growth | HekayaHaus Dubai"
+  description="Three core pillars under one roof: Marketing (social, branding, influencer, PR), Performance (media production, campaigns, performance & digital marketing) and Growth (web, CRM, software, AI agents & automation, SEO/AEO/GEO)."
+>
+  <PageHero eyebrow="Our capabilities" title={['Everything your', 'business needs to', 'move forward.', 'Connected under', '*one roof.*']} crumbs={[{ name: 'What We Do' }]} wide titleClass="h-xl">
+    <p class="lead">You shouldn’t have to explain your business to five different companies, manage five different teams and hope everything comes together.</p>
+    <p class="lead">Your brand, your marketing, your content and your technology should work towards the same goal. That’s why HekayaHaus brings them together — three core pillars, a connected team, and the ability to see the bigger picture and take care of the details.</p>
+    <Fragment slot="aside">
+      <nav class="chips" aria-label="Jump to pillar">
+        {pillars.map((p) => <a class="chip" href={`#${p.id}`}>{p.n} {p.name}</a>)}
+      </nav>
+    </Fragment>
+  </PageHero>
+
+  {pillars.map((p, pi) => (
+    <section class="section pillar-section" id={p.id} aria-labelledby={`h-${p.id}`}>
+      <div class="container">
+        <div class="pillar-head">
+          <div>
+            <p class="num" data-reveal>Pillar {p.n}</p>
+            <h2 id={`h-${p.id}`} class="pillar-name" data-reveal>{p.name}</h2>
+            <p class="h-l serif accent" data-reveal style="text-transform:none">{p.headline}</p>
+            <div class="media media--parallax" data-reveal="scale"><Img name={imgs[p.id] ?? p.image} sizes="(min-width: 860px) 42vw, 100vw" /></div>
+          </div>
+          <div>
+            <div class="body-copy" data-reveal>{p.pageIntro.map((t) => <p class="lead">{t}</p>)}</div>
+            <ol class="svc-list" role="list">
+              {p.services.map((s, i) => (
+                <li class="svc" data-reveal>
+                  <span class="num">{p.n}.{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{s.link ? <a href={s.link}>{s.name}</a> : s.name}</h3>
+                  <div class="body-copy">
+                    {s.body.map((b) => <p>{b}</p>)}
+                    {s.link && <a class="link-arrow" href={s.link}>Learn more <Icon name="arrow" /></a>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div style="margin-top:32px" data-reveal><Button href={p.route} variant="ghost" size="sm">{p.cta}</Button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section surface">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Better together</p>
+          <Split lines={['The real advantage', 'is how it all', '*comes together.*']} class="h-xl" />
+        </div>
+        <p class="lead" data-reveal>When these pieces work together, they become more powerful. That’s the HekayaHaus approach.</p>
+      </div>
+      <div class="together">
+        <div data-reveal><span class="num">Campaign</span><p>A great campaign can bring attention.</p></div>
+        <div data-reveal style="--delay:80ms"><span class="num">Brand</span><p>A strong brand can build trust.</p></div>
+        <div data-reveal style="--delay:160ms"><span class="num">Website</span><p>A well-designed website can convert interest.</p></div>
+        <div data-reveal style="--delay:240ms"><span class="num">Automation</span><p>And the right automation can make growth easier to manage.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title={['Tell us what your', 'business *needs.*']} primary={{ label: 'Tell Us What Your Business Needs', href: '/contact-us' }} secondary={{ label: 'Book a Discovery Call', href: site.calendar }} />
+</Base>

@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import Split from '../components/Split.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+const areas = [
+  { t: 'Internships', b: 'Hands-on roles inside live projects across media, marketing, performance and technology.' },
+  { t: 'Placements', b: 'Structured placement opportunities for students ready to contribute to real client work.' },
+  { t: 'Industry projects', b: 'Briefs and collaborative projects that bring real business challenges into the classroom.' },
+  { t: 'Mentorship', b: 'Sessions and guidance from people who build, produce and grow brands every day.' },
+];
+const mail = `mailto:${site.hrEmail}?subject=${encodeURIComponent('University partnership enquiry')}`;
+---
+<Base
+  title="University & Placement Partnerships | HekayaHaus Dubai"
+  description="Building the next generation. HekayaHaus welcomes universities, colleges and educational institutions interested in internships, placements, industry projects, mentorship and collaborative initiatives."
+>
+  <PageHero eyebrow="Building the next generation" title={['Great talent deserves', 'the right *opportunity.*']} crumbs={[{ name: 'Join the Haus' }, { name: 'University Partnerships' }]} wide titleClass="h-xl">
+    <p class="lead">We believe the next generation of creative thinkers, marketers, entrepreneurs and technologists shouldn’t have to wait until graduation to experience the real world.</p>
+    <p class="lead">Through university connections, placement partnerships and industry engagement, we aim to create meaningful opportunities for students to learn, contribute and discover what they’re capable of.</p>
+    <Fragment slot="aside"><Button href={mail}>Explore University Partnerships</Button></Fragment>
+  </PageHero>
+
+  <section class="section hairline">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>How we partner</p>
+          <Split lines={['Real briefs.', 'Real teams.', 'Real *experience.*']} class="h-xl" />
+        </div>
+        <p class="lead" data-reveal>We welcome conversations with universities, colleges and educational institutions interested in internships, placements, industry projects, mentorship and collaborative initiatives.</p>
+      </div>
+      <div class="perks">
+        {areas.map((a, i) => <div class="card" data-reveal style={`--delay:${i * 70}ms`}><span class="num">{String(i + 1).padStart(2, '0')}</span><h3 class="h-m">{a.t}</h3><p>{a.b}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <p class="eyebrow" data-reveal>Partner institutions</p>
+      <div class="partner-slot" style="margin-top:24px" data-reveal>
+        Partner institutions will be shown here once a placement or partnership relationship has been formally established.
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title={['Let’s build the', 'next generation, *together.*']}
+    lead={`Partnership enquiries: ${site.hrEmail}`}
+    primary={{ label: 'Start a partnership conversation', href: mail }}
+    secondary={{ label: 'Careers at the Haus', href: '/careers' }}
+  />
+</Base>

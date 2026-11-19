@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+const perks = [
+  { t: 'Real Work', b: 'Get involved in projects for businesses and recognised brands.' },
+  { t: 'Room to Grow', b: 'Learn through execution, collaboration and responsibility.' },
+  { t: 'Different Perspectives', b: 'Work alongside people from creative, commercial and technical backgrounds.' },
+  { t: 'Build Something', b: 'Be part of a growing company where your contribution can make a difference.' },
+];
+const roles = ['Creative & Content Production', 'Videography & Photography', 'Video Editing & Post-production', 'Graphic Design & Branding', 'Social Media & Marketing', 'Performance & Digital Marketing', 'Sales & Business Development', 'PR & Influencer Marketing', 'Web Development & Software', 'AI & Automation', 'Project Management & Operations', 'Internships & Graduate Opportunities'];
+const types = ['Full-time', 'Part-time', 'Internship', 'Freelance', 'Collaboration'];
+---
+<Base
+  title="Careers — Join the Haus | HekayaHaus Dubai"
+  description="Don’t just look for a place to work. Find a place to build. Careers, internships, freelance and collaboration opportunities at HekayaHaus across media, marketing, performance and technology."
+>
+  <PageHero eyebrow="Careers · Collaborations · Opportunities" title={['Don’t just look for', 'a place to work.', 'Find a place to *build.*']} crumbs={[{ name: 'Join the Haus' }, { name: 'Careers' }]} wide titleClass="h-xl">
+    <p class="lead">We’re building something that doesn’t stand still. And we’re always interested in meeting people who don’t either. The curious ones. The ones who take initiative, challenge ideas, learn fast and care about the work they put their name on.</p>
+    <p class="lead">Whether you’re an experienced professional, a fresh graduate or someone with a talent that deserves a bigger platform, there could be a place for you at HekayaHaus.</p>
+    <Fragment slot="aside"><Button href="#apply">Apply to Join Us</Button></Fragment>
+  </PageHero>
+
+  <section class="section hairline">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Life at the Haus</p>
+          <Split lines={['Experience different', 'industries. Turn ideas', 'into things people', 'actually *experience.*']} class="h-l" />
+        </div>
+        <p class="lead" data-reveal>At HekayaHaus, you’ll get the opportunity to be part of projects across media, marketing, performance and technology — and to understand how businesses actually operate.</p>
+      </div>
+      <div class="perks">
+        {perks.map((p, i) => (
+          <div class="card" data-reveal style={`--delay:${i * 70}ms`}><span class="num">{String(i + 1).padStart(2, '0')}</span><h3 class="h-m">{p.t}</h3><p>{p.b}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface">
+    <div class="container">
+      <p class="eyebrow eyebrow--accent" data-reveal>Opportunities</p>
+      <Split lines={['Different talents.', 'One *Haus.*']} class="h-xl" />
+      <p class="lead" data-reveal style="margin-top:20px">We welcome applications across:</p>
+      <ul class="roles" role="list">
+        {roles.map((r, i) => <li data-reveal style={`--delay:${(i % 3) * 60}ms`}><span class="num">{String(i + 1).padStart(2, '0')}</span>{r}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="apply" data-module="form">
+    <div class="container apply-grid">
+      <div>
+        <p class="eyebrow eyebrow--accent" data-reveal>Join the Haus — Application form</p>
+        <Split lines={['Let’s get to', '*know you.*']} class="h-xl" />
+        <p class="lead" data-reveal style="margin-top:20px">Tell us a little about yourself, what you do and what you’d like to bring to HekayaHaus.</p>
+        <p class="lead" data-reveal style="margin-top:20px">Prefer email? Send your profile directly to <a class="accent" href={`mailto:${site.hrEmail}`}>{site.hrEmail}</a>.</p>
+      </div>
+      <div class="form-card" data-reveal>
+        <form class="form" data-form="apply" action="/api/apply" method="post" novalidate data-mailto={site.hrEmail}>
+          <h3 class="label form-section-title">Personal details</h3>
+          <div class="form-row">
+            <div class="field"><label for="af-fullName">Full name</label><input id="af-fullName" name="fullName" autocomplete="name" required /></div>
+            <div class="field"><label for="af-email">Email address</label><input id="af-email" name="email" type="email" autocomplete="email" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="af-phone">Phone / WhatsApp</label><input id="af-phone" name="phone" type="tel" autocomplete="tel" required pattern="^\+?[0-9\s()\-]{7,20}$" /></div>
+            <div class="field"><label for="af-location">Current location</label><input id="af-location" name="location" autocomplete="address-level2" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="af-linkedin">LinkedIn profile <span class="opt">(optional)</span></label><input id="af-linkedin" name="linkedin" type="url" placeholder="https://linkedin.com/in/…" /></div>
+            <div class="field"><label for="af-portfolioUrl">Portfolio / website <span class="opt">(if applicable)</span></label><input id="af-portfolioUrl" name="portfolioUrl" type="url" placeholder="https://…" /></div>
+          </div>
+
+          <h3 class="label form-section-title">Your opportunity</h3>
+          <div class="field">
+            <label for="af-position">Position / department you’re interested in</label>
+            <select id="af-position" name="position" required>
+              <option value="">Choose one</option>
+              {roles.map((r) => <option>{r}</option>)}
+            </select>
+          </div>
+          <fieldset class="field">
+            <legend>Employment type</legend>
+            <div class="radio-row">
+              {types.map((t, i) => <label><input type="radio" name="employmentType" value={t} required={i === 0} /><span>{t}</span></label>)}
+            </div>
+          </fieldset>
+          <div class="form-row">
+            <div class="field"><label for="af-experience">Years of experience</label><input id="af-experience" name="experience" inputmode="numeric" placeholder="e.g. 3" /></div>
+            <div class="field"><label for="af-availability">Current availability</label><input id="af-availability" name="availability" placeholder="e.g. Immediately, 1 month" /></div>
+          </div>
+          <div class="field"><label for="af-compensation">Expected salary / compensation <span class="opt">(if applicable)</span></label><input id="af-compensation" name="compensation" /></div>
+
+          <h3 class="label form-section-title">A little about you</h3>
+          <div class="field"><label for="af-why">Why HekayaHaus?</label><textarea id="af-why" name="why" rows="3" required minlength="10"></textarea></div>
+          <div class="field"><label for="af-fit">What makes you a good fit for this opportunity?</label><textarea id="af-fit" name="fit" rows="3"></textarea></div>
+          <div class="field"><label for="af-proud">What is something you’ve created or accomplished that you’re proud of?</label><textarea id="af-proud" name="proud" rows="3"></textarea></div>
+
+          <h3 class="label form-section-title">Attachments</h3>
+          <div class="field"><label for="af-cv">Upload your CV / resume</label><input id="af-cv" name="cv" type="file" accept=".pdf,.doc,.docx" required /><span class="hint">PDF or Word</span></div>
+          <div class="field"><label for="af-work">Upload portfolio / relevant work <span class="opt">(optional)</span></label><input id="af-work" name="work" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.zip" /><span class="hint">PDF, image or ZIP · total under 3.5 MB — use the portfolio link for larger work</span></div>
+
+          <div class="hp" aria-hidden="true"><label for="af-hp">Leave this field empty</label><input id="af-hp" name="website_url" tabindex="-1" autocomplete="off" /></div>
+          <div class="form-status" role="status" aria-live="polite" hidden></div>
+          <div class="cta-actions" style="margin-top:6px"><button class="btn" type="submit" data-magnetic><span>Send My Application</span><span class="btn-icon"><Icon name="arrow" /></span></button></div>
+          <p class="microcopy" style="margin-top:0">We appreciate the time you take to apply. Our team will review your application and contact you if there’s a suitable opportunity.</p>
+        </form>
+        <template data-success>
+          <div class="form-success" tabindex="-1">
+            <p class="eyebrow eyebrow--accent">Application received</p>
+            <h3 class="h-l" style="margin-top:18px">Thank you for applying.</h3>
+            <p class="lead">We appreciate the time you took to apply. Our team will review your application and contact you if there’s a suitable opportunity.</p>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+</Base>

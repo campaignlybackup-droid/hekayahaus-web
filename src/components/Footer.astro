@@ -1,0 +1,65 @@
+---
+import { site, pillars, nav } from '../data/site';
+import Icon from './Icon.astro';
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="brand" aria-label="HekayaHaus — home">
+          <img src="/media/brand/h-mark-160.png" alt="" width="26" height="29" loading="lazy" />
+          <span>HEKAYAHAUS</span>
+        </a>
+        <p class="footer-tagline">Beyond Seen. Into Felt.</p>
+        <p>{site.description}</p>
+        <div class="socials">
+          <a href={site.socials.instagram} target="_blank" rel="noopener" aria-label="HekayaHaus on Instagram"><Icon name="instagram" /></a>
+          <a href={site.socials.linkedin} target="_blank" rel="noopener" aria-label="HekayaHaus on LinkedIn"><Icon name="linkedin" /></a>
+          <a href={site.socials.youtube} target="_blank" rel="noopener" aria-label="HekayaHaus on YouTube"><Icon name="youtube" /></a>
+        </div>
+      </div>
+      <div>
+        <h3 class="label">Explore</h3>
+        <ul>
+          <li><a href="/portfolio">Portfolio</a></li>
+          <li><a href="/what-we-do">What We Do</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/blogs">Insights</a></li>
+          <li><a href="/contact-us">Contact</a></li>
+        </ul>
+        <h3 class="label" style="margin-top:32px">Join the Haus</h3>
+        <ul>
+          {nav.join.items.map((i) => <li><a href={i.href}>{i.label.replace(' — Join the Haus', '')}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h3 class="label">Capabilities</h3>
+        <ul>
+          {pillars.map((p) => <li><a href={p.route}>{p.n} — {p.name}</a></li>)}
+          <li><a href="/media-production-dubai">Media Production</a></li>
+          <li><a href="/content-marketing-dubai">Social Media Marketing</a></li>
+          <li><a href="/performance-marketing-dubai">Performance &amp; Digital</a></li>
+          <li><a href="/graphics-dubai">Graphic Design &amp; Branding</a></li>
+          <li><a href="/pr-influencer-marketing-dubai">PR &amp; Influencers</a></li>
+          <li><a href="/web-development-dubai">Web, CRM &amp; AI</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h3 class="label">Get in touch</h3>
+        <p>Have a project, an ambition or a challenge worth discussing?</p>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={site.whatsappUrl} target="_blank" rel="noopener">{site.whatsappDisplay}</a>
+        <p style="margin-top:14px">{site.location}</p>
+      </div>
+    </div>
+    <div class="footer-word" aria-hidden="true">HekayaHaus</div>
+    <div class="footer-bottom">
+      <span>{site.copyright}</span>
+      <nav aria-label="Legal">
+        <a href="/privacy-policy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="https://www.hekayahaus.com">www.hekayahaus.com</a>
+      </nav>
+    </div>
+  </div>
+</footer>

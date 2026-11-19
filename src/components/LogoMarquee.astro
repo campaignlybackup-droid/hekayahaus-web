@@ -1,0 +1,20 @@
+---
+import { logos } from '../data/site';
+const mono = new Set(['Nike', 'Farak', 'Hero', 'EA Sports']);
+const wide = new Set(['Farak']);
+interface Props { label?: string }
+const { label = 'Brands we have worked with' } = Astro.props;
+---
+<div class="marquee" role="region" aria-label={label} data-marquee>
+  <div class="marquee-track">
+    {[false, true].map((hidden) => (
+      <ul class="marquee-group" role="list" aria-hidden={hidden ? 'true' : undefined}>
+        {logos.map((l) => (
+          <li class:list={['logo', mono.has(l.name) && 'logo--mono', wide.has(l.name) && 'logo--wide']}>
+            <img src={l.logo} alt={hidden ? '' : l.name} width={l.w} height={l.h} loading="lazy" decoding="async" />
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>

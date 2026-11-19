@@ -1,0 +1,98 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { projects, pillarById, site, type Project } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({ params: { slug: p.slug }, props: { project: p, next: projects[(i + 1) % projects.length] } }));
+}
+const { project: p, next } = Astro.props as { project: Project; next: Project };
+const pillar = pillarById(p.pillar);
+
+/* Case-study template. Each section renders only when real, project-specific copy exists —
+   add `brief`, `challenge`, `thinking`, `execution`, `outcome` (strings) to a project in
+   src/data/content.json as client-approved information becomes available. */
+const story = p as Project & Partial<Record<'brief' | 'challenge' | 'thinking' | 'execution' | 'outcome' | 'client', string>>;
+const sections = [
+  { k: 'brief', t: 'The Brief', lead: 'Every meaningful project starts with a reason.' },
+  { k: 'challenge', t: 'The Challenge', lead: 'What needed to change.' },
+  { k: 'thinking', t: 'The Thinking', lead: 'The strategy, creative direction and decisions behind the work.' },
+  { k: 'execution', t: 'The Execution', lead: 'From concept to production and delivery.' },
+  { k: 'outcome', t: 'The Outcome', lead: 'The impact of the project.' },
+].filter((s) => typeof (story as any)[s.k] === 'string' && (story as any)[s.k].trim());
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: p.title,
+  genre: p.discipline,
+  description: p.summary,
+  creator: { '@id': `${site.url}/#organization` },
+  image: `${site.url}/media/img/${p.cover}-1440.webp`,
+};
+---
+<Base title={`${p.title} — ${p.discipline} | HekayaHaus Portfolio`} description={p.summary} image={`/media/img/${p.cover}-1440.webp`} type="article" jsonLd={[ld]}>
+  <PageHero eyebrow={`${p.category} — ${p.discipline}`} title={[p.title]} crumbs={[{ name: 'Portfolio', href: '/portfolio' }, { name: p.title }]} titleClass="h-xxl">
+    <p class="lead">{p.summary}</p>
+  </PageHero>
+
+  <section class="container">
+    <div class="media media--parallax project-cover" data-reveal="scale">
+      <Img name={p.cover} sizes="100vw" priority />
+    </div>
+    <dl class="project-facts" data-reveal>
+      {story.client && <div><dt class="label">Client</dt><dd>{story.client}</dd></div>}
+      <div><dt class="label">Category</dt><dd>{p.category}</dd></div>
+      <div><dt class="label">Discipline</dt><dd>{p.discipline}</dd></div>
+      <div><dt class="label">Pillar</dt><dd><a href={pillar.route}>{pillar.n} — {pillar.name}</a></dd></div>
+      <div><dt class="label">Services</dt><dd>{p.services.map((s) => <a href={s.to}>{s.label}</a>)}</dd></div>
+    </dl>
+  </section>
+
+  <section class="section" style="padding-top:clamp(56px,7vw,100px)">
+    <div class="container">
+      <div class="story">
+        {sections.length > 0
+          ? sections.map((s) => (
+              <div class="story-row" data-reveal>
+                <h2>{s.t}</h2>
+                <div><p class="label" style="margin-bottom:12px">{s.lead}</p><p class="lead">{(story as any)[s.k]}</p></div>
+              </div>
+            ))
+          : (
+              <div class="story-row" data-reveal>
+                <h2>The Work</h2>
+                <div class="body-copy">{p.body.map((b) => <p class="lead">{b}</p>)}</div>
+              </div>
+            )}
+      </div>
+    </div>
+  </section>
+
+  {p.gallery.length > 0 && (
+    <section class="container" aria-label={`${p.title} gallery`}>
+      <div class:list={['mosaic', p.gallery.length === 1 && 'n1']}>
+        {p.gallery.map((g, i) => (
+          <div class="media media--parallax" data-reveal style={`--delay:${(i % 2) * 90}ms`}>
+            <Img name={g} sizes="(min-width: 600px) 50vw, 100vw" />
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="container section--tight">
+    <a class="next-project" href={`/portfolio/${next.slug}`} data-cursor="Next">
+      <span>
+        <span class="label">Next project</span>
+        <span class="h-xl" style="display:block">{next.title}</span>
+      </span>
+      <span class="tile-arrow"><Icon name="arrow" /></span>
+    </a>
+  </section>
+
+  <CtaBand title={['Have something', 'in *mind?*']} lead="Let’s create something worth remembering." primary={{ label: 'Start Your Project', href: '/contact-us' }} />
+</Base>

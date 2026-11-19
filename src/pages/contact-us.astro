@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { site, pillars } from '../data/site';
+const disciplines = [...pillars.map((p) => `${p.name} — ${p.bullets.map((b) => b.split(' (')[0]).slice(0, 3).join(', ')}`), 'More than one — the full picture', 'Not sure yet — help me decide'];
+---
+<Base
+  title="Contact HekayaHaus — Let’s Talk | Creative Media & Marketing Agency, Dubai"
+  description="Tell us what you’ve been trying to build. Contact HekayaHaus in Dubai — info@hekayahaus.com · WhatsApp +971 55 248 9492 — or book a discovery call."
+>
+  <PageHero eyebrow="Let’s talk" title={['Tell us what', 'you’ve been trying', 'to *build.*']} crumbs={[{ name: 'Contact' }]} titleClass="h-xxl">
+    <p class="lead">Maybe you’ve got a business that’s ready for its next chapter. Maybe you’ve invested in marketing before and haven’t seen the results you expected. Maybe there’s an idea you’ve been sitting on, a brand that needs a new direction or a problem you haven’t found the right people to solve.</p>
+    <p class="lead">Whatever brings you here, we’d like to understand it. No assumptions. No ready-made packages pushed your way. Just a conversation about where you are, where you want to go and what it might take to get there.</p>
+  </PageHero>
+
+  <section class="section" style="padding-top:0" data-module="form">
+    <div class="container contact-grid">
+      <div class="form-card" data-reveal>
+        <h2 class="h-l">Let’s start with your story.</h2>
+        <p class="form-intro">A little about you helps us make the first conversation more meaningful.</p>
+        <form class="form" data-form="contact" action="/api/contact" method="post" novalidate data-mailto={site.email}>
+          <div class="form-row">
+            <div class="field"><label for="cf-firstName">First name</label><input id="cf-firstName" name="firstName" autocomplete="given-name" required /></div>
+            <div class="field"><label for="cf-lastName">Last name</label><input id="cf-lastName" name="lastName" autocomplete="family-name" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="cf-email">Email address</label><input id="cf-email" name="email" type="email" autocomplete="email" required /></div>
+            <div class="field"><label for="cf-phone">Phone / WhatsApp</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+971 …" required pattern="^\+?[0-9\s()\-]{7,20}$" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="cf-company">Company / brand <span class="opt">(optional)</span></label><input id="cf-company" name="company" autocomplete="organization" /></div>
+            <div class="field"><label for="cf-website">Website or socials <span class="opt">(optional)</span></label><input id="cf-website" name="website" placeholder="www… or @handle" /></div>
+          </div>
+          <div class="field">
+            <label for="cf-discipline">What can we help with?</label>
+            <select id="cf-discipline" name="discipline">
+              <option value="">Choose a discipline (optional)</option>
+              {disciplines.map((d) => <option>{d}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="cf-offer">What does your business sell or offer? <span class="opt">(optional)</span></label>
+            <input id="cf-offer" name="offer" />
+          </div>
+          <div class="field">
+            <label for="cf-message">Where do you want to take your business?</label>
+            <textarea id="cf-message" name="message" required minlength="10" maxlength="4000" placeholder="Your goals, your challenges, what you’ve tried before…"></textarea>
+          </div>
+          <div class="hp" aria-hidden="true"><label for="cf-hp">Leave this field empty</label><input id="cf-hp" name="website_url" tabindex="-1" autocomplete="off" /></div>
+          <div class="form-status" role="status" aria-live="polite" hidden></div>
+          <div class="cta-actions" style="margin-top:6px;align-items:center">
+            <button class="btn" type="submit" data-magnetic><span>Start the Conversation</span><span class="btn-icon"><Icon name="arrow" /></span></button>
+          </div>
+          <p class="microcopy" style="margin-top:0">Your information stays with our team. We’ll review your enquiry and get back to you.</p>
+        </form>
+        <template data-success>
+          <div class="form-success" tabindex="-1">
+            <p class="eyebrow eyebrow--accent">Message received</p>
+            <h3 class="h-l" style="margin-top:18px">Thank you for reaching out.</h3>
+            <p class="lead">Your story has reached the right place. Someone from our team will be in touch shortly.</p>
+          </div>
+        </template>
+      </div>
+
+      <aside class="contact-aside" aria-label="Other ways to reach us">
+        <p class="eyebrow" data-reveal>Prefer a direct conversation?</p>
+        <p class="lead" data-reveal>Sometimes a quick conversation is the best place to start.</p>
+        <a class="contact-line" href={site.whatsappUrl} target="_blank" rel="noopener" data-reveal>
+          <span class="label">WhatsApp</span><strong>{site.whatsappDisplay}</strong><span>Connect on WhatsApp</span>
+        </a>
+        <a class="contact-line" href={`mailto:${site.email}`} data-reveal>
+          <span class="label">Email</span><strong>{site.email}</strong><span>We reply on working days</span>
+        </a>
+        <a class="contact-line" href={site.calendar} target="_blank" rel="noopener" data-reveal>
+          <span class="label">Discovery call</span><strong>Book a time</strong><span>Pick a slot that suits you</span>
+        </a>
+        <div class="contact-line" data-reveal>
+          <span class="label">Studio</span><strong>{site.location}</strong><span>Working across the UAE, India and beyond · <a href="https://www.hekayahaus.com">www.hekayahaus.com</a></span>
+        </div>
+        <p class="footer-tagline" data-reveal>You bring the ambition. Let’s work on what comes next.</p>
+      </aside>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,104 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import Split from '../components/Split.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import ProjectTile from '../components/ProjectTile.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { services, pillarById, projects, serviceReels, videos, youtubeEmbed, site, type Service } from '../data/site';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { service: s.slug }, props: { service: s } }));
+}
+const { service: s } = Astro.props as { service: Service };
+const pillar = pillarById(s.pillar);
+const reel = serviceReels[s.slug];
+const related = projects.filter((p) => p.services.some((x) => x.to === `/${s.slug}`)).slice(0, 3);
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: s.name, serviceType: s.name, description: s.metaDescription, provider: { '@id': `${site.url}/#organization` }, areaServed: ['AE', 'IN', 'US'] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: s.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+<Base title={s.metaTitle} description={s.metaDescription} image={`/media/img/${s.image}-1440.webp`} jsonLd={ld}>
+  <PageHero eyebrow={`${pillar.n} ${pillar.name} — ${s.heroTitle}`} title={[s.heading]} crumbs={[{ name: 'What We Do', href: '/what-we-do' }, { name: pillar.name, href: pillar.route }, { name: s.name }]} wide titleClass="h-xl">
+    <p class="lead">{s.intro}</p>
+    <Fragment slot="aside">
+      <div class="cta-actions" style="margin-top:0">
+        <Button href="/contact-us">Get a proposal</Button>
+        {reel && (
+          <button class="btn btn--ghost" type="button" data-reel={youtubeEmbed(reel)} data-reel-title={reel.title} data-magnetic><span>Watch the reel</span><span class="btn-icon"><Icon name="play" /></span></button>
+        )}
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      {[...s.ticker, ...s.ticker, ...s.ticker, ...s.ticker].map((t) => <span>{t}</span>)}
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>What’s included</p>
+          <Split lines={['Capabilities']} class="h-xl" />
+        </div>
+        <div class="media media--parallax" style="aspect-ratio:16/10" data-reveal="scale"><Img name={s.image} sizes="(min-width: 900px) 46vw, 100vw" priority /></div>
+      </div>
+      <div class="grid-2" style="margin-top:clamp(40px,5vw,72px)">
+        {s.capabilities.map((c, i) => (
+          <div class="card" data-reveal style={`--delay:${(i % 2) * 80}ms`}>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h-m">{c.title}</h3>
+            <p>{c.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {s.gallery.length > 0 && (
+    <section class="container" aria-label={`${s.name} work`}>
+      <div class="mosaic">
+        {s.gallery.slice(0, 4).map((g, i) => (
+          <div class="media media--parallax" data-reveal style={`--delay:${(i % 2) * 90}ms`}><Img name={g} sizes="(min-width: 600px) 50vw, 100vw" /></div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {related.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="sec-head sec-head--split">
+          <div>
+            <p class="eyebrow eyebrow--accent" data-reveal>Case studies</p>
+            <Split lines={['Related *work*']} class="h-xl" />
+          </div>
+          <div data-reveal><a class="link-arrow" href="/portfolio">Full portfolio <Icon name="arrow" /></a></div>
+        </div>
+        <div class="grid-3" style="margin-top:48px">
+          {related.map((c, i) => <ProjectTile project={c} delay={i * 80} sizes="(min-width: 960px) 33vw, (min-width: 680px) 50vw, 100vw" />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section--tight hairline">
+    <div class="container faq-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,6vw,100px)">
+      <div>
+        <p class="eyebrow" data-reveal>{s.name} — FAQ</p>
+        <h2 class="h-l" data-reveal style="margin-top:20px">Good questions.</h2>
+        <p class="lead" data-reveal style="margin-top:16px">Part of <a class="accent" href={pillar.route}>Pillar {pillar.n} — {pillar.name}</a>.</p>
+      </div>
+      <div data-reveal><Faq items={s.faqs} /></div>
+    </div>
+  </section>
+
+  <CtaBand title={['Let’s build', 'what’s *next.*']} lead="Tell us where you want to take your business. We’ll help you figure out what it takes to get there." primary={{ label: 'Start Your Project', href: '/contact-us' }} secondary={{ label: 'Book a Discovery Call', href: site.calendar }} />
+</Base>

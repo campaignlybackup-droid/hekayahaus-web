@@ -1,0 +1,18 @@
+---
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+import type { Project } from '../data/site';
+interface Props { project: Project; sizes?: string; delay?: number; wide?: boolean }
+const { project: p, sizes = '(min-width: 1024px) 40vw, (min-width: 600px) 50vw, 100vw', delay = 0, wide = false } = Astro.props;
+---
+<a class="project-tile" href={`/portfolio/${p.slug}`} data-pillar={p.pillar} data-reveal style={`--delay:${delay}ms`} data-cursor="View">
+  <span class:list={['media', 'media-zoom', wide && 'wide']}><Img name={p.cover} sizes={sizes} /></span>
+  <span class="project-tile-meta">
+    <span>
+      <span class="label">{p.category}</span>
+      <h3>{p.title}</h3>
+      <p>{p.discipline}</p>
+    </span>
+    <span class="tile-arrow"><Icon name="arrow" /></span>
+  </span>
+</a>

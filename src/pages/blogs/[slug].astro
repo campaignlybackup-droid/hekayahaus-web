@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { articles, site, type Article } from '../../data/site';
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+const { article: a } = Astro.props as { article: Article };
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: a.title,
+  description: a.description,
+  datePublished: a.date,
+  image: `${site.url}/media/img/${a.image}-1440.webp`,
+  author: { '@id': `${site.url}/#organization` },
+  publisher: { '@id': `${site.url}/#organization` },
+  mainEntityOfPage: `${site.url}/blogs/${a.slug}`,
+};
+---
+<Base title={`${a.title} | The HekayaHaus Journal`} description={a.description} image={`/media/img/${a.image}-1440.webp`} type="article" jsonLd={[ld]}>
+  <PageHero eyebrow={`Journal · ${a.category}`} title={[a.title]} crumbs={[{ name: 'Insights', href: '/blogs' }, { name: a.category }]} wide titleClass="h-l">
+    <div class="article-meta"><span class="label">{fmt(a.date)}</span><span class="label">{a.readTime}</span><span class="label">HekayaHaus</span></div>
+  </PageHero>
+  <section class="container">
+    <div class="media project-cover" data-reveal="scale"><Img name={a.image} sizes="100vw" priority /></div>
+  </section>
+  <article class="section container">
+    <div class="article article-body">
+      {a.body.map((p) => (p.startsWith('## ') ? <h2>{p.slice(3)}</h2> : <p>{p}</p>))}
+    </div>
+  </article>
+  <CtaBand title={['Have a challenge', 'worth *discussing?*']} lead="Let’s turn a good question into a better direction." primary={{ label: 'Talk to Our Team', href: '/contact-us' }} />
+</Base>

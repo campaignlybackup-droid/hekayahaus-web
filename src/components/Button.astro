@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+interface Props { href: string; variant?: 'primary' | 'ghost'; size?: 'sm' | 'md'; external?: boolean; icon?: 'arrow' | 'play' | 'external' | 'none'; class?: string; [key: string]: any }
+const { href, variant = 'primary', size = 'md', external, icon = 'arrow', class: cls = '', ...rest } = Astro.props;
+const isExternal = external ?? /^(https?:|mailto:|tel:)/.test(href);
+---
+<a
+  href={href}
+  class:list={['btn', variant === 'ghost' && 'btn--ghost', size === 'sm' && 'btn--sm', icon === 'none' && 'btn--plain', cls]}
+  data-magnetic
+  {...(isExternal && href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+  {...rest}
+>
+  <span><slot /></span>
+  {icon !== 'none' && <span class="btn-icon"><Icon name={icon} /></span>}
+</a>

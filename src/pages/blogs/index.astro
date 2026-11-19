@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { articles, insightCategories } from '../../data/site';
+const featured = articles.find((a) => a.featured) ?? articles[0];
+const rest = articles.filter((a) => a !== featured);
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base
+  title="The HekayaHaus Journal — Insights on Marketing, Production, Branding & AI Search"
+  description="Better thinking makes better business. Perspectives from HekayaHaus on strategy, marketing, production, branding, technology & AI, and AI search."
+>
+  <PageHero eyebrow="The HekayaHaus Journal" title={['Better thinking', 'makes better', '*business.*']} crumbs={[{ name: 'Insights' }]}>
+    <p class="lead">Ideas, perspectives and things worth knowing. The way people discover brands is changing. The way businesses grow is changing. And the way we create, communicate and connect needs to evolve with it.</p>
+    <p class="lead">Here, we explore the ideas, strategies, shifts and lessons shaping the worlds of creativity, marketing, business and technology. No recycled advice. Just perspectives worth your time.</p>
+  </PageHero>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="chips" style="margin-bottom:36px" data-reveal>
+        {insightCategories.map((c) => <span class="chip">{c}</span>)}
+      </div>
+      <a class="feature-article" href={`/blogs/${featured.slug}`} data-reveal data-cursor="Read">
+        <span class="media media-zoom"><Img name={featured.image} sizes="(min-width: 860px) 55vw, 100vw" /></span>
+        <span>
+          <span class="eyebrow eyebrow--accent">Editor’s pick · {featured.category}</span>
+          <h2 class="h-l">{featured.title}</h2>
+          <p class="lead">{featured.description}</p>
+          <span class="label" style="display:block;margin-top:18px">{fmt(featured.date)} · {featured.readTime}</span>
+          <span class="link-arrow">Read the article <Icon name="arrow" /></span>
+        </span>
+      </a>
+      {rest.length > 0 && (
+        <div class="grid-3" style="margin-top:48px">
+          {rest.map((a) => (
+            <a class="card" href={`/blogs/${a.slug}`} data-reveal>
+              <span class="num">{a.category}</span>
+              <h3 class="h-m">{a.title}</h3>
+              <p>{a.description}</p>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <CtaBand title={['Have a challenge', 'worth *discussing?*']} lead="Let’s turn a good question into a better direction." primary={{ label: 'Talk to Our Team', href: '/contact-us' }} />
+</Base>

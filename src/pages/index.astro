@@ -1,0 +1,396 @@
+---
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+import Split from '../components/Split.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import LogoMarquee from '../components/LogoMarquee.astro';
+import Faq from '../components/Faq.astro';
+import { site, pillars, projects, featuredProjectSlugs, processSteps, stats, videos, featuredIn, faq, projectsByPillar, youtubeEmbed } from '../data/site';
+import '../styles/home.css';
+
+const featured = featuredProjectSlugs.map((s) => projects.find((p) => p.slug === s)!).filter(Boolean);
+const words = (s: string) => s.split(' ').map((w) => `<span class="w">${w}</span>`).join(' ');
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+const siteLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'HekayaHaus', url: site.url, publisher: { '@id': `${site.url}/#organization` } };
+const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performance: 'auto-cockpit', growth: 'web-editorial' };
+---
+<Base
+  title="HekayaHaus — Beyond Seen. Into Felt. | Fastest Growing Creative Media Marketing Haus, UAE"
+  description="HekayaHaus is a creative media, marketing and technology haus in Dubai. Marketing, Performance and Growth under one roof — trusted by 200+ brands across the UAE, India and beyond."
+  jsonLd={[siteLd, faqLd]}
+>
+  <script is:inline slot="head">
+    (function () {
+      var d = document.documentElement;
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        d.classList.add('intro');
+        setTimeout(function () { if (!window.__introStarted) d.classList.remove('intro'); }, 3200);
+      }
+    })();
+  </script>
+
+  <div data-module="home">
+    <!-- ======================= HERO ======================= -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <canvas class="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-inner container">
+        <div class="hero-group">
+          <h1 id="hero-title" class="hero-title">
+            <span class="sr-only">HekayaHaus — Beyond Seen. Into Felt.</span>
+            <span class="hero-word h-mega" aria-hidden="true">{'HEKAYAHAUS'.split('').map((c) => <span class="ch">{c}</span>)}</span>
+            <span class="hero-tag" aria-hidden="true">
+              <span class="tl"><span>Beyond seen.</span></span>
+              <span class="tl"><span>Into <em class="serif accent">felt.</em></span></span>
+            </span>
+          </h1>
+          <p class="hero-position" data-hero-late>
+            Fastest Growing Creative Media Marketing Haus <span class="dot" aria-hidden="true">•</span> UAE
+          </p>
+          <div class="hero-ctas" data-hero-late>
+            <Button href={site.calendar}>Book a Discovery Call</Button>
+            <button class="btn btn--ghost" type="button" data-reel={youtubeEmbed(videos.showreel)} data-reel-title={videos.showreel.title} data-magnetic>
+              <span>Watch Showreel</span><span class="btn-icon"><Icon name="play" /></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-foot container" data-hero-late>
+        <span class="label">Dubai — UAE · India · USA</span>
+        <a href="#story" class="scroll-cue" aria-label="Scroll to explore"><span class="label">Scroll</span><span class="cue-line" aria-hidden="true"></span></a>
+        <span class="label">200+ brands &amp; clients</span>
+      </div>
+    </section>
+
+    <!-- ======================= STATEMENT ======================= -->
+    <section class="section statement" id="story">
+      <div class="container">
+        <p class="eyebrow" data-reveal>Your business, seen properly</p>
+        <Split lines={['Your business deserves', 'to be seen for what', 'it can *become.*']} class="h-xl statement-title" />
+        <div class="statement-grid">
+          <p class="scrub-text h-l" data-scrub-words set:html={words('You’ve spent money. You’ve trusted people. You’ve been left with work that looked good but did nothing for the business.') + ' <span class="w serif accent">We get it.</span>'} />
+          <div class="statement-body body-copy" data-reveal>
+            <p>You’re not looking for another agency that talks big and disappears.</p>
+            <p>You’re looking for a partner who grows the brand, builds something people remember, and turns attention into <strong>real sales.</strong> That’s what we do.</p>
+            <p><strong>200+ brands later,</strong> the results are still the same: clearer identity, stronger presence, and measurable growth.</p>
+          </div>
+        </div>
+      </div>
+      <div class="statement-logos" data-reveal>
+        <LogoMarquee />
+      </div>
+      <div class="container statement-cta">
+        <div data-reveal>
+          <Button href={site.calendar}>Book a Discovery Call</Button>
+          <p class="microcopy">Built through collaborations with 200+ clients and brands across industries, markets and ambitions.</p>
+        </div>
+        <button
+          class="reel-card"
+          type="button"
+          data-reel={youtubeEmbed(videos.showreel)}
+          data-reel-title={videos.showreel.title}
+          data-cursor="Play"
+          data-reveal="scale"
+          aria-label="Watch the HekayaHaus showreel"
+        >
+          <span class="media"><Img name="showreel-poster" sizes="(min-width: 1024px) 60vw, 100vw" decorative /></span>
+          <span class="reel-play" aria-hidden="true"><Icon name="play" /></span>
+          <span class="reel-label"><span class="label">Watch</span><span class="h-m">Showreel</span></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================= FEATURED IN ======================= -->
+    <section class="section--tight featured-in hairline" aria-labelledby="fi-title">
+      <div class="container fi-inner">
+        <h2 id="fi-title" class="eyebrow" data-reveal>Featured in &amp; recognised by</h2>
+        <ul class="fi-list" role="list">
+          {featuredIn.map((f, i) => (
+            <li data-reveal style={`--delay:${i * 80}ms`}>
+              {f.href ? (
+                <a class="fi-item" href={f.href} target="_blank" rel="noopener">
+                  <span class="fi-name">{f.name}</span>
+                  <span class="fi-kind label">{f.kind} <Icon name="external" /></span>
+                  <span class="fi-detail">{f.detail}</span>
+                </a>
+              ) : (
+                <div class="fi-item">
+                  <span class="fi-name">{f.name}</span>
+                  <span class="fi-kind label">{f.kind}</span>
+                  <span class="fi-detail">{f.detail}</span>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= THE HAUS ======================= -->
+    <section class="section haus" aria-labelledby="haus-title">
+      <div class="container haus-grid">
+        <div class="haus-media">
+          <div class="media media--parallax haus-img" data-reveal="scale">
+            <Img name="portrait-lightbulb-duo" sizes="(min-width: 1024px) 40vw, 100vw" />
+          </div>
+          <p class="haus-caption label" data-reveal>Hekaya — story. Haus — home.</p>
+        </div>
+        <div class="haus-copy">
+          <p class="eyebrow eyebrow--accent" data-reveal>The Haus</p>
+          <Split id="haus-title" lines={['Not an agency.', 'A Haus you can', '*actually trust.*']} class="h-xl" />
+          <div class="body-copy haus-body" data-reveal>
+            <p>Most founders we meet carry the same quiet frustration. They’ve been burned before, overpromised, under-delivered, or left with beautiful work that never moved the numbers.</p>
+            <p>We built HekayaHaus to end that cycle.</p>
+            <p>Here, creativity is not decoration. It is the engine that grows the business, strengthens the brand, and increases sales, with <strong>full transparency at every step.</strong></p>
+          </div>
+          <ul class="nots" role="list">
+            <li data-reveal><span class="x" aria-hidden="true"></span>No hidden scopes.</li>
+            <li data-reveal style="--delay:90ms"><span class="x" aria-hidden="true"></span>No disappearing after the invoice.</li>
+            <li data-reveal style="--delay:180ms"><span class="x" aria-hidden="true"></span>No “trust us, it’s art.”</li>
+          </ul>
+          <p class="haus-sign" data-reveal>Just one team, one standard, and <strong>200+ brands</strong> who already know the difference.</p>
+          <div data-reveal><a class="link-arrow" href="/about">More about the Haus <Icon name="arrow" /></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= PILLARS ======================= -->
+    <section class="section pillars" aria-labelledby="pillars-title">
+      <div class="container">
+        <div class="sec-head sec-head--split">
+          <div>
+            <p class="eyebrow eyebrow--accent" data-reveal>What we do — Three pillars</p>
+            <Split id="pillars-title" lines={['Three pillars.', 'One *Haus.*']} class="h-xxl" />
+          </div>
+          <p class="lead" data-reveal>Everything we do sits under three clear pillars. No fragmented services. No confusion. Just focused power that actually moves the business.</p>
+        </div>
+        <div class="pillar-stack">
+          {pillars.map((p, i) => {
+            const cases = projectsByPillar(p.id).slice(0, 3);
+            return (
+              <article class="pillar-card" style={`--i:${i}`} aria-labelledby={`pillar-${p.id}`}>
+                <div class="pillar-inner">
+                  <div class="pillar-copy">
+                    <div class="pillar-top">
+                      <span class="num">{p.n} — {p.name}</span>
+                      <span class="label">{i + 1} / 3</span>
+                    </div>
+                    <h3 id={`pillar-${p.id}`} class="pillar-name">{p.name}</h3>
+                    <p class="pillar-line serif">{p.line}</p>
+                    <div class="body-copy">{p.intro.map((t) => <p>{t}</p>)}</div>
+                    <ul class="pillar-list" role="list">
+                      {p.bullets.map((b) => <li>{b}</li>)}
+                    </ul>
+                    <div class="pillar-actions">
+                      <Button href={p.route} variant="ghost" size="sm">{p.cta}</Button>
+                    </div>
+                  </div>
+                  <div class="pillar-side">
+                    <a href={p.route} class="media pillar-img media-zoom" tabindex="-1" aria-hidden="true" data-cursor="Explore">
+                      <Img name={pillarImages[p.id] ?? p.image} sizes="(min-width: 1024px) 40vw, 100vw" decorative />
+                    </a>
+                    {cases.length > 0 && (
+                      <div class="pillar-cases">
+                        <span class="label">Case studies</span>
+                        <ul role="list">
+                          {cases.map((c) => (
+                            <li>
+                              <a href={`/portfolio/${c.slug}`}>
+                                <span>{c.title}</span>
+                                <span class="case-meta">{c.discipline}</span>
+                                <Icon name="arrow" />
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= LEGACIES ======================= -->
+    <section class="section legacies" aria-labelledby="legacy-title">
+      <h2 id="legacy-title" class="sr-only">Where stories become legacies.</h2>
+      <div class="legacy-lines" aria-hidden="true">
+        <div class="legacy-line" data-drift="-1">Where stories become <em class="serif">legacies</em> — Where stories become <em class="serif">legacies</em> —</div>
+        <div class="legacy-line outline" data-drift="1">Beyond seen. Into felt. — Beyond seen. Into felt. — Beyond seen. Into felt. —</div>
+      </div>
+      <div class="container legacy-grid">
+        <div class="body-copy" data-reveal>
+          <p class="legacy-lead">We don’t just create.</p>
+          <p>We grow businesses, build brands that last, and turn attention into sales, with the same care we would give our own company.</p>
+        </div>
+        <ul class="legacy-facts" role="list">
+          <li data-reveal><span class="h-l"><span data-count="200">200</span>+</span><span class="label">Clients</span></li>
+          <li data-reveal style="--delay:90ms"><span class="h-l">Proven</span><span class="label">Results</span></li>
+          <li data-reveal style="--delay:180ms"><span class="h-l">Zero</span><span class="label">Tolerance for the games you’ve already seen</span></li>
+        </ul>
+        <div class="legacy-cta" data-reveal>
+          <p>When you’re ready to work with a Haus that actually stands behind its word —</p>
+          <Button href={site.calendar}>Book a Discovery Call</Button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FEATURED WORK ======================= -->
+    <section class="work" aria-labelledby="work-title">
+      <div class="container section work-head">
+        <div class="sec-head sec-head--split">
+          <div>
+            <p class="eyebrow eyebrow--accent" data-reveal>Featured work</p>
+            <Split id="work-title" lines={['Don’t take our word', 'for it. *Look closer.*']} class="h-xxl" />
+          </div>
+          <div data-reveal>
+            <p class="lead">Different challenges. Different ambitions. Different industries. Every project begins with understanding what needs to change — and ends with something built to make a difference.</p>
+            <p class="lead" style="margin-top:14px">Here’s what that looks like in the real world.</p>
+          </div>
+        </div>
+      </div>
+      <div class="rail" data-rail>
+        <div class="rail-track">
+          <button class="rail-item rail-film" type="button" data-reel={youtubeEmbed(videos.showreel)} data-reel-title={videos.showreel.title} data-cursor="Play">
+            <span class="media"><Img name="showreel-poster" sizes="(min-width: 1024px) 46vw, 86vw" decorative /></span>
+            <span class="reel-play" aria-hidden="true"><Icon name="play" /></span>
+            <span class="rail-meta"><span class="label">Film · Showreel</span><span class="rail-title">Beyond Seen, Into Felt</span></span>
+          </button>
+          {featured.map((p, i) => (
+            <a class="rail-item" href={`/portfolio/${p.slug}`} data-cursor="View">
+              <span class="media media-zoom"><Img name={p.cover} sizes="(min-width: 1024px) 34vw, 80vw" /></span>
+              <span class="rail-meta">
+                <span class="label">{String(i + 1).padStart(2, '0')} · {p.category}</span>
+                <span class="rail-title">{p.title}</span>
+                <span class="rail-sub">{p.discipline}</span>
+              </span>
+            </a>
+          ))}
+          <button class="rail-item rail-film" type="button" data-reel={youtubeEmbed(videos.productionReel)} data-reel-title={videos.productionReel.title} data-cursor="Play">
+            <span class="media"><Img name="auto-mercedes-dubai" sizes="(min-width: 1024px) 46vw, 86vw" decorative /></span>
+            <span class="reel-play" aria-hidden="true"><Icon name="play" /></span>
+            <span class="rail-meta"><span class="label">Film · Media &amp; Production reel</span><span class="rail-title">Media &amp; Production</span></span>
+          </button>
+          <a class="rail-item rail-end" href="/portfolio">
+            <span class="h-l">More work like this</span>
+            <span class="tile-arrow"><Icon name="arrow" /></span>
+          </a>
+        </div>
+        <div class="rail-progress" aria-hidden="true"><span></span></div>
+      </div>
+      <div class="container work-cta" data-reveal>
+        <Button href="/portfolio">Explore Our Portfolio</Button>
+      </div>
+    </section>
+
+    <!-- ======================= PROCESS ======================= -->
+    <section class="section process" aria-labelledby="process-title">
+      <div class="container process-grid">
+        <div class="process-sticky">
+          <p class="eyebrow eyebrow--accent" data-reveal>Our approach</p>
+          <Split id="process-title" lines={['Good work doesn’t', 'happen by *accident.*']} class="h-xl" />
+          <p class="lead" data-reveal>Behind every strong outcome is a clear understanding of what needs to happen, why it matters and who’s responsible for making it happen. Our process keeps the thinking sharp and the execution accountable.</p>
+          <div class="process-frames" aria-hidden="true">
+            {processSteps.map((s, i) => (
+              <div class:list={['media', 'process-frame', i === 0 && 'is-active']} data-step-img>
+                <Img name={s.image} sizes="(min-width: 1024px) 36vw, 0px" decorative />
+              </div>
+            ))}
+            <div class="process-bar" data-step-bar><span></span></div>
+          </div>
+        </div>
+        <ol class="process-steps" role="list">
+          {processSteps.map((s, i) => (
+            <li class:list={['process-step', i === 0 && 'is-active']} data-step>
+              <span class="num">{s.n}</span>
+              <h3 class="h-l">{s.title}</h3>
+              <p>{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- ======================= RESULTS ======================= -->
+    <section class="section results surface" aria-labelledby="results-title">
+      <div class="container">
+        <div class="sec-head sec-head--split">
+          <div>
+            <p class="eyebrow eyebrow--accent" data-reveal>The work speaks</p>
+            <Split id="results-title" lines={['Experience matters.', '*Evidence* matters more.']} class="h-xl" />
+          </div>
+          <div class="body-copy" data-reveal>
+            <p>We believe trust should never depend on how confidently someone sells their services. It should come from the work they’ve done, the people they’ve worked with and the results they can stand behind.</p>
+            <p>Over the years, HekayaHaus has worked alongside more than 200 businesses and brands, contributing to campaigns, productions, brand experiences and digital growth initiatives.</p>
+            <p>From international names to businesses building their place in the market, every collaboration adds to what we know and what we’re capable of delivering.</p>
+          </div>
+        </div>
+        <ul class="stats" role="list">
+          {stats.map((s, i) => (
+            <li data-reveal style={`--delay:${i * 80}ms`}>
+              <span class="stat-num"><span data-count={s.value}>{s.value}</span><span class="accent">{s.suffix}</span></span>
+              <span class="stat-label">{s.label}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="logo-wall" data-reveal>
+          <LogoMarquee label="Selected collaborations" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= WHY ======================= -->
+    <section class="section why" aria-labelledby="why-title">
+      <div class="container why-grid">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Why HekayaHaus</p>
+          <Split id="why-title" lines={['Because your', 'business is not a', '*testing ground.*']} class="h-xl" />
+        </div>
+        <div class="body-copy why-body" data-reveal>
+          <p>We know what it’s like to put your trust, time and money into something and still be left with more questions than answers.</p>
+          <p>The unclear communication. The missed expectations. The work that looks good in a presentation but doesn’t do much for the business.</p>
+          <p>We don’t believe that’s how a professional partnership should feel.</p>
+          <p>At HekayaHaus, we start with understanding, set clear expectations and take responsibility for the work we commit to.</p>
+          <p><strong>You know what we’re working towards. You know who’s handling it.</strong> And you have a team that understands the bigger picture, not just the task in front of them.</p>
+          <p>We won’t promise overnight success or pretend every challenge has an easy answer. We will bring the right people, the right thinking and the commitment to do the work properly.</p>
+        </div>
+      </div>
+      <div class="container">
+        <blockquote class="why-quote" data-reveal>
+          <p>Your ambition deserves more than another service provider. It deserves a partner who <em class="serif accent">sees the bigger picture.</em></p>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ======================= FAQ ======================= -->
+    <section class="section--tight faq-sec hairline" aria-labelledby="faq-title">
+      <div class="container faq-grid">
+        <div>
+          <p class="eyebrow" data-reveal>Questions, answered</p>
+          <h2 id="faq-title" class="h-l" data-reveal style="margin-top:20px">What founders ask us first.</h2>
+        </div>
+        <div data-reveal><Faq items={faq} /></div>
+      </div>
+    </section>
+
+    <!-- ======================= FINAL CTA ======================= -->
+    <section class="end" aria-labelledby="end-title">
+      <canvas class="end-canvas" aria-hidden="true"></canvas>
+      <div class="end-glow" aria-hidden="true"></div>
+      <div class="container end-inner">
+        <p class="eyebrow eyebrow--accent" data-reveal style="justify-content:center">Let’s build what’s next</p>
+        <Split id="end-title" lines={['There’s more', 'your business', 'can *become.*']} class="h-xxl" />
+        <p class="lead" data-reveal>You can keep doing things the way they’ve always been done. Or you can start building what comes next. Tell us where you want to take your business. We’ll help you figure out what it takes to get there.</p>
+        <div class="cta-actions" data-reveal>
+          <Button href="/contact-us">Let’s Build What’s Next</Button>
+          <Button href={site.calendar} variant="ghost">Book a Discovery Call</Button>
+        </div>
+        <p class="microcopy" data-reveal>No generic sales pitch. Just an honest conversation about your business.</p>
+      </div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Button from '../../components/Button.astro';
+import ProjectTile from '../../components/ProjectTile.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import Split from '../../components/Split.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { projects, pillars, videos, youtubeEmbed, site } from '../../data/site';
+const films = [
+  { v: videos.showreel, img: 'showreel-poster', label: 'Full creative showreel' },
+  { v: videos.productionReel, img: 'auto-mercedes-dubai', label: 'Media & production reel' },
+];
+---
+<Base
+  title="Portfolio — Campaigns, Production, Branding & Digital | HekayaHaus Dubai"
+  description="The work: campaigns, media production, branding, social content and digital experiences created by HekayaHaus with brands and businesses across the UAE, India and beyond."
+>
+  <PageHero eyebrow="The Work" title={['Ideas are easy', 'to talk about.', 'This is what happens', 'when they become *real.*']} crumbs={[{ name: 'Portfolio' }]} wide titleClass="h-xl">
+    <p class="lead">Every project has a story behind it. A challenge to solve, an ambition to pursue, a moment worth creating.</p>
+    <p class="lead">Our portfolio brings together the work we’ve created with brands and businesses across production, marketing, campaigns, branding and digital experiences. Different briefs. Different worlds. One commitment to making the work count.</p>
+    <Fragment slot="aside"><Button href="/contact-us">Discuss a Project</Button></Fragment>
+  </PageHero>
+
+  <section class="section" style="padding-top:0" data-module="filter">
+    <div class="container">
+      <div class="filter-bar">
+        <div class="chips" role="group" aria-label="Filter projects by pillar">
+          <button class="chip" type="button" aria-pressed="true" data-filter="all">All work</button>
+          {pillars.map((p) => <button class="chip" type="button" aria-pressed="false" data-filter={p.id}>{p.name}</button>)}
+        </div>
+        <span class="label" aria-live="polite" data-filter-count>{projects.length} projects</span>
+      </div>
+      <div class="work-grid" data-filter-grid>
+        {projects.map((p, i) => <ProjectTile project={p} delay={(i % 3) * 80} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Films</p>
+          <Split lines={['Showreels']} class="h-xl" />
+        </div>
+        <p class="lead" data-reveal>Service-specific reels for production, social, branding and campaigns are on the way. Until then, here’s the work in motion.</p>
+      </div>
+      <div class="films">
+        {films.map((f) => (
+          <button class="film-card" type="button" data-reel={youtubeEmbed(f.v)} data-reel-title={f.v.title} data-cursor="Play" data-reveal>
+            <span class="media"><Img name={f.img} sizes="(min-width: 760px) 50vw, 100vw" decorative /></span>
+            <span class="reel-play" aria-hidden="true"><Icon name="play" /></span>
+            <span class="rail-meta"><span class="label">{f.label}</span><span class="rail-title">{f.v.title.replace('HEKAYA HAUS — ', '').replace(' | Full Creative Showreel', '')}</span></span>
+          </button>
+        ))}
+      </div>
+      <p style="margin-top:32px" data-reveal><a class="link-arrow" href={site.socials.youtube} target="_blank" rel="noopener">HekayaHaus on YouTube <Icon name="external" /></a></p>
+    </div>
+  </section>
+
+  <CtaBand title={['Have something', 'in *mind?*']} lead="Let’s create something worth remembering." primary={{ label: 'Start Your Project', href: '/contact-us' }} />
+</Base>

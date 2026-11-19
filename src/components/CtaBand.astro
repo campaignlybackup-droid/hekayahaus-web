@@ -1,0 +1,19 @@
+---
+import Split from './Split.astro';
+import Button from './Button.astro';
+import { site } from '../data/site';
+interface Props { eyebrow?: string; title: string[]; lead?: string; primary?: { label: string; href: string }; secondary?: { label: string; href: string } | false; micro?: string }
+const { eyebrow, title, lead, primary = { label: 'Start Your Project', href: '/contact-us' }, secondary = { label: 'Book a Discovery Call', href: site.calendar }, micro } = Astro.props;
+---
+<section class="section cta-band">
+  <div class="container">
+    {eyebrow && <p class="eyebrow eyebrow--accent" data-reveal style="justify-content:center">{eyebrow}</p>}
+    <Split lines={title} class="h-xxl" />
+    {lead && <p class="lead" data-reveal>{lead}</p>}
+    <div class="cta-actions" data-reveal style="--delay:120ms">
+      <Button href={primary.href}>{primary.label}</Button>
+      {secondary && <Button href={secondary.href} variant="ghost">{secondary.label}</Button>}
+    </div>
+    {micro && <p class="microcopy" data-reveal>{micro}</p>}
+  </div>
+</section>

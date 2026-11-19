@@ -1,0 +1,9 @@
+---
+/* Renders a headline whose lines mask-reveal on scroll. Lines are separated by "|" in `lines` or passed as an array. Supports *serif* emphasis. */
+interface Props { lines: string[]; as?: string; class?: string; delay?: number; id?: string }
+const { lines, as: Tag = 'h2', class: cls, delay = 0, id } = Astro.props;
+const fmt = (s: string) => s.replace(/\*([^*]+)\*/g, '<em class="serif accent">$1</em>').replace(/_([^_]+)_/g, '<em class="serif">$1</em>');
+---
+<Tag class={cls} data-split data-reveal-split id={id} style={delay ? `--delay:${delay}ms` : undefined}>
+  {lines.map((l, i) => <span class="split-line" style={`--i:${i}`}><span set:html={fmt(l)} /></span>)}
+</Tag>

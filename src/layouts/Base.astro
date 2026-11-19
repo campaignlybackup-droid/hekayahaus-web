@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import '../styles/pages.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ReelModal from '../components/ReelModal.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+  bodyClass?: string;
+}
+const { title, description, image = '/media/img/portrait-lightbulb-duo-1440.webp', type = 'website', noindex = false, jsonLd = [], bodyClass } = Astro.props;
+const canonical = new URL(Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, ''), site.url).href;
+const ogImage = new URL(image, site.url).href;
+const org = {
+  '@context': 'https://schema.org',
+  '@type': ['Organization', 'ProfessionalService'],
+  '@id': `${site.url}/#organization`,
+  name: site.name,
+  legalName: site.legalName,
+  url: site.url,
+  logo: `${site.url}/media/brand/hekayahaus-mark.png`,
+  image: `${site.url}/media/img/portrait-lightbulb-duo-1440.webp`,
+  slogan: site.tagline,
+  description: site.description,
+  email: site.email,
+  telephone: site.whatsapp,
+  address: { '@type': 'PostalAddress', addressLocality: 'Dubai', addressCountry: 'AE' },
+  areaServed: ['AE', 'IN', 'US'],
+  sameAs: Object.values(site.socials),
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#050608" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="HekayaHaus" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/brand/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/media/brand/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/media/brand/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+    <slot name="head" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!rm) d.classList.add('motion');
+      })();
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(org)} />
+    {jsonLd.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <ReelModal />
+    <div class="cursor" aria-hidden="true"><div class="cursor-ring"><span></span></div><div class="cursor-dot"></div></div>
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

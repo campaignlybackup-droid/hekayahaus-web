@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { featuredIn, site } from '../data/site';
+const mail = `mailto:${site.email}?subject=${encodeURIComponent('Mentorship / collaboration enquiry')}`;
+---
+<Base
+  title="Mentorship & Collaborations | HekayaHaus Dubai"
+  description="Building businesses. Encouraging the next generation. HekayaHaus on mentorship, entrepreneurship, featured alumni recognition and creative collaborations."
+>
+  <PageHero eyebrow="Beyond business" title={['Building businesses.', 'Encouraging the', '*next generation.*']} crumbs={[{ name: 'Join the Haus' }, { name: 'Mentorship & Collaborations' }]} wide titleClass="h-xl">
+    <p class="lead">Our relationship with creativity and entrepreneurship goes beyond the work we deliver for clients.</p>
+    <p class="lead">We believe knowledge becomes more valuable when it’s shared, and experience becomes more meaningful when it helps someone else take their first step.</p>
+    <Fragment slot="aside"><Button href={mail}>Connect With HekayaHaus</Button></Fragment>
+  </PageHero>
+
+  <section class="section hairline">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Featured alumni &amp; entrepreneurship</p>
+          <Split lines={['Stories, features and', 'alumni *recognition.*']} class="h-xl" />
+        </div>
+        <p class="lead" data-reveal>From founder features to institutional recognition — and the mentorship that follows.</p>
+      </div>
+      <div class="grid-2" style="margin-top:clamp(40px,5vw,64px)">
+        {featuredIn.map((f, i) => {
+          const inner = (
+            <>
+              <span class="num">{f.kind}</span>
+              <h3 class="h-m">{f.name}</h3>
+              <p>{f.detail}</p>
+              {f.href && <span class="link-arrow" style="margin-top:14px">Read the feature <Icon name="external" /></span>}
+            </>
+          );
+          return f.href ? <a class="card" href={f.href} target="_blank" rel="noopener" data-reveal style={`--delay:${(i % 2) * 80}ms`}>{inner}</a> : <div class="card" data-reveal style={`--delay:${(i % 2) * 80}ms`}>{inner}</div>;
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Collaborate with us</p>
+          <Split lines={['Creators, brands,', 'institutions, *founders.*']} class="h-xl" />
+        </div>
+        <div class="body-copy" data-reveal>
+          <p>Whether it’s a talk, a mentorship session, a creative collaboration or a joint initiative, we’re open to conversations that create value for both sides — and for the people they reach.</p>
+          <p>Tell us what you have in mind and who it’s for. We’ll come back with honest thoughts on how we could help.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title={['Your next chapter', 'could start *here.*']}
+    lead="Whether you’re looking to join our team, build a university partnership or collaborate with us, we’d love to hear from you."
+    primary={{ label: 'Connect With HekayaHaus', href: mail }}
+    secondary={{ label: 'University Partnerships', href: '/university-partnerships' }}
+  />
+</Base>

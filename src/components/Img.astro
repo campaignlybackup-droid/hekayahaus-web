@@ -1,0 +1,21 @@
+---
+import { images } from '../data/site';
+interface Props { name: string; sizes?: string; alt?: string; priority?: boolean; class?: string; decorative?: boolean }
+const { name, sizes = '100vw', alt, priority = false, class: cls, decorative = false } = Astro.props;
+const meta = images[name];
+const widths = meta?.widths ?? [960];
+const srcset = widths.map((w) => `/media/img/${name}-${w}.webp ${w}w`).join(', ');
+const src = `/media/img/${name}-${widths[Math.min(1, widths.length - 1)]}.webp`;
+---
+<img
+  src={src}
+  srcset={srcset}
+  sizes={sizes}
+  alt={decorative ? '' : (alt ?? meta?.alt ?? '')}
+  width={meta?.w}
+  height={meta?.h}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding="async"
+  fetchpriority={priority ? 'high' : 'auto'}
+  class={cls}
+/>

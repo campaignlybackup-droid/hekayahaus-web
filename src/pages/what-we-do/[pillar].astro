@@ -1,0 +1,115 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Button from '../../components/Button.astro';
+import Split from '../../components/Split.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import ProjectTile from '../../components/ProjectTile.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { pillars, servicesByPillar, projectsByPillar, site, type Pillar } from '../../data/site';
+
+export function getStaticPaths() {
+  return pillars.map((p) => ({ params: { pillar: p.id }, props: { pillar: p } }));
+}
+const { pillar: p } = Astro.props as { pillar: Pillar };
+const svcPages = servicesByPillar(p.id);
+const cases = projectsByPillar(p.id);
+const others = pillars.filter((x) => x.id !== p.id);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `${p.name} — HekayaHaus`,
+  provider: { '@id': `${site.url}/#organization` },
+  areaServed: ['AE', 'IN', 'US'],
+  description: p.metaDescription,
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: p.name, itemListElement: p.services.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name } })) },
+};
+---
+<Base title={p.metaTitle} description={p.metaDescription} image={`/media/img/${p.image}-1440.webp`} jsonLd={[ld]}>
+  <PageHero eyebrow={`Pillar ${p.n} — ${p.name}`} title={[p.headline]} crumbs={[{ name: 'What We Do', href: '/what-we-do' }, { name: p.name }]} titleClass="h-xxl">
+    <p class="lead">{p.pageIntro[0]}</p>
+    <p class="lead">{p.pageIntro[1]}</p>
+    <Fragment slot="aside"><Button href="/contact-us">Start a conversation</Button></Fragment>
+  </PageHero>
+
+  <section class="container">
+    <div class="media media--parallax project-cover" data-reveal="scale"><Img name={p.image} sizes="100vw" priority /></div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>{p.name}</p>
+          <Split lines={[p.line]} class="h-l" />
+        </div>
+        <div class="body-copy" data-reveal>{p.intro.map((t) => <p class="lead">{t}</p>)}</div>
+      </div>
+      <ol class="svc-list" role="list">
+        {p.services.map((s, i) => (
+          <li class="svc" data-reveal>
+            <span class="num">{p.n}.{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.link ? <a href={s.link}>{s.name}</a> : s.name}</h3>
+            <div class="body-copy">
+              {s.body.map((b) => <p>{b}</p>)}
+              {s.link && <a class="link-arrow" href={s.link}>Learn more <Icon name="arrow" /></a>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {svcPages.length > 0 && (
+    <section class="section--tight surface">
+      <div class="container">
+        <p class="eyebrow" data-reveal>Specialist services</p>
+        <div class="grid-3" style="margin-top:32px">
+          {svcPages.map((s, i) => (
+            <a class="card" href={`/${s.slug}`} data-reveal style={`--delay:${i * 70}ms`}>
+              <span class="num">{s.ticker.slice(0, 3).join(' · ')}</span>
+              <h3 class="h-m">{s.name}</h3>
+              <p>{s.intro}</p>
+              <span class="link-arrow" style="margin-top:18px">Explore <Icon name="arrow" /></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {cases.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="sec-head sec-head--split">
+          <div>
+            <p class="eyebrow eyebrow--accent" data-reveal>Case studies</p>
+            <Split lines={['Look *closer.*']} class="h-xl" />
+          </div>
+          <div data-reveal><a class="link-arrow" href={`/portfolio?pillar=${p.id}`}>All {p.name.toLowerCase()} work <Icon name="arrow" /></a></div>
+        </div>
+        <div class="grid-3" style="margin-top:48px">
+          {cases.slice(0, 3).map((c, i) => <ProjectTile project={c} delay={i * 80} sizes="(min-width: 960px) 33vw, (min-width: 680px) 50vw, 100vw" />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section--tight hairline">
+    <div class="container">
+      <p class="eyebrow" data-reveal>The other pillars</p>
+      <div class="grid-2" style="margin-top:28px">
+        {others.map((o) => (
+          <a class="card" href={o.route} data-reveal>
+            <span class="num">{o.n} — {o.name}</span>
+            <h3 class="h-m">{o.line}</h3>
+            <span class="link-arrow" style="margin-top:18px">{o.cta} <Icon name="arrow" /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title={['Tell us what your', 'business *needs.*']} primary={{ label: 'Tell Us What Your Business Needs', href: '/contact-us' }} />
+</Base>
