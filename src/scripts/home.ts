@@ -102,6 +102,10 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
   if (motion) {
     gsap.to(hero.querySelector('.hero-inner'), {
       yPercent: -18,
+      rotationX: 28,
+      z: -160,
+      transformPerspective: 1000,
+      transformOrigin: '50% 100%',
       opacity: 0.15,
       ease: 'none',
       scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
@@ -151,13 +155,36 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
     /* legacy line drifts sideways with scroll */
     gsap.utils.toArray<HTMLElement>('[data-drift]').forEach((el) => {
       const dir = Number(el.dataset.drift) || -1;
-      gsap.fromTo(el, { xPercent: dir > 0 ? -12 : 4 }, { xPercent: dir > 0 ? 4 : -12, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+      gsap.fromTo(
+        el,
+        { xPercent: dir > 0 ? -12 : 4, rotationX: 55, z: -120 },
+        {
+          xPercent: dir > 0 ? 4 : -12,
+          rotationX: -40,
+          z: 0,
+          ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+        },
+      );
     });
 
     /* featured work: horizontal pinned rail */
     const rail = document.querySelector<HTMLElement>('[data-rail]');
     const track = rail?.querySelector<HTMLElement>('.rail-track');
+    const railItems = gsap.utils.toArray<HTMLElement>('.rail-item');
+    const skewTo = railItems.map((it) => gsap.quickTo(it, 'skewX', { duration: 0.5, ease: 'power3.out' }));
+    const coverflow = (velocity: number) => {
+      const cx = window.innerWidth / 2;
+      const skew = gsap.utils.clamp(-8, 8, velocity / -260);
+      railItems.forEach((it, i) => {
+        const r = it.getBoundingClientRect();
+        const off = gsap.utils.clamp(-1.4, 1.4, (r.left + r.width / 2 - cx) / cx);
+        gsap.set(it, { rotationY: off * -18, z: -Math.abs(off) * 140, transformOrigin: '50% 50%' });
+        skewTo[i](skew);
+      });
+    };
     if (rail && track) {
+      coverflow(0);
       const dist = () => track.scrollWidth - rail.clientWidth;
       gsap.to(track, {
         x: () => -dist(),
@@ -169,7 +196,10 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
           pin: true,
           scrub: 0.8,
           invalidateOnRefresh: true,
-          onUpdate: (s) => rail.style.setProperty('--p', String(s.progress)),
+          onUpdate: (s) => {
+            rail.style.setProperty('--p', String(s.progress));
+            coverflow(s.getVelocity());
+          },
         },
       });
     }
@@ -179,11 +209,27 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
   const steps = document.querySelectorAll<HTMLElement>('[data-step]');
   const frames = document.querySelectorAll<HTMLElement>('[data-step-img]');
   const bar = document.querySelector<HTMLElement>('[data-step-bar]');
+  const deck = document.querySelector<HTMLElement>('.process-frames');
+  if (deck && motion) deck.classList.add('is-deck');
   const setStep = (n: number) => {
     steps.forEach((s, i) => s.classList.toggle('is-active', i === n));
-    frames.forEach((f, i) => f.classList.toggle('is-active', i === n));
+    frames.forEach((f, i) => {
+      f.classList.toggle('is-active', i === n);
+      if (!motion) return;
+      const o = i - n; // 0 = front, >0 = waiting in the stack, <0 = played
+      if (o < 0) {
+        f.style.transform = 'translate3d(0, 70%, 160px) rotateX(-28deg)';
+        f.style.opacity = '0';
+      } else {
+        f.style.transform = `translate3d(0, ${-o * 5}%, ${-o * 70}px) rotateX(${o * 2}deg)`;
+        f.style.opacity = String(o > 2 ? 0 : 1 - o * 0.3);
+        f.style.filter = `brightness(${1 - o * 0.22})`;
+      }
+      f.style.zIndex = String(20 - Math.abs(o));
+    });
     bar?.style.setProperty('--p', String((n + 1) / steps.length));
   };
+  setStep(0);
   steps.forEach((s, i) => {
     ScrollTrigger.create({ trigger: s, start: 'top 60%', end: 'bottom 60%', onToggle: (st) => st.isActive && setStep(i) });
   });
@@ -224,6 +270,82 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
       { rootMargin: '600px 0px' },
     );
     io.observe(endCanvas);
+  }
+
+  /* ---------- 3D: three pillars assemble into one Haus ---------- */
+  const assembly = document.querySelector<HTMLElement>('[data-assembly]');
+  if (assembly) {
+    const items = assembly.querySelectorAll<HTMLElement>('[data-assembly-item]');
+    const caption = assembly.querySelector<HTMLElement>('[data-assembly-caption]');
+    const stageCanvas = assembly.querySelector<HTMLCanvasElement>('.haus-canvas')!;
+    const state = { p: motion ? 0 : 1 };
+    let haus: import('./haus3d').HausScene | null = null;
+    const names = ['Marketing', 'Performance', 'Growth'];
+    const apply = () => {
+      const p = state.p;
+      const focus = p < 0.12 ? -1 : p < 0.36 ? 0 : p < 0.56 ? 1 : p < 0.8 ? 2 : -1;
+      items.forEach((li, i) => {
+        li.classList.toggle('is-on', p >= 0.12 + i * 0.2 || p >= 0.8);
+        li.classList.toggle('is-focus', focus === i);
+      });
+      if (caption) caption.textContent = p >= 0.8 ? 'One Haus.' : focus >= 0 ? `0${focus + 1} — ${names[focus]}` : 'Three pillars';
+      if (haus) {
+        haus.progress = p;
+        haus.focus = focus;
+      }
+    };
+    apply();
+
+    if (motion && tier > 0) {
+      const boot = new IntersectionObserver(
+        async ([e]) => {
+          if (!e.isIntersecting) return;
+          boot.disconnect();
+          try {
+            const { HausScene } = await import('./haus3d');
+            haus = new HausScene(stageCanvas, { quality: tier === 2 ? 2 : 1 });
+            gsap.ticker.add(haus.tick);
+            assembly.classList.add('has-haus');
+            apply();
+          } catch {
+            /* keep the static mark */
+          }
+        },
+        { rootMargin: '800px 0px' },
+      );
+      boot.observe(assembly);
+
+      const amm = gsap.matchMedia();
+      amm.add('(min-width: 1024px)', () => {
+        ScrollTrigger.create({
+          trigger: assembly,
+          start: () => `top top+=${(document.getElementById('nav')?.offsetHeight ?? 76) * 0.5}`,
+          end: '+=190%',
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          onUpdate: (st) => {
+            state.p = st.progress;
+            apply();
+          },
+        });
+      });
+      amm.add('(max-width: 1023px)', () => {
+        ScrollTrigger.create({
+          trigger: assembly.querySelector('.assembly-stage'),
+          start: 'top 80%',
+          end: 'bottom 30%',
+          scrub: 1,
+          onUpdate: (st) => {
+            state.p = st.progress;
+            apply();
+          },
+        });
+      });
+    } else {
+      state.p = 1;
+      apply();
+    }
   }
 
   ScrollTrigger.refresh();

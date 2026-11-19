@@ -295,6 +295,96 @@ function initPointer() {
 }
 initPointer();
 
+/* ---------------- 3D tilt + light glare ---------------- */
+function initTilt() {
+  if (!fineMQ.matches || !motionOK()) return;
+  const sel = '.project-tile .media, .reel-card, .rail-item .media, .film-card .media, .pillar-img, .feature-article .media, .haus-img, .contact-line, .perks .card, .grid-3 .card, .grid-2 .card, .together > div, .fi-item';
+  document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
+    el.classList.add('tilt');
+    const glare = document.createElement('span');
+    glare.className = 'glare';
+    glare.setAttribute('aria-hidden', 'true');
+    el.appendChild(glare);
+    let armed = false;
+    const arm = () => {
+      if (armed) return true;
+      if (el.hasAttribute('data-reveal') && root.classList.contains('motion') && !el.classList.contains('in')) return false;
+      armed = true;
+      el.classList.add('tilting');
+      gsap.set(el, { transformPerspective: 900, transformOrigin: '50% 50%' });
+      return true;
+    };
+    const rx = gsap.quickTo(el, 'rotationX', { duration: 0.6, ease: 'power3.out' });
+    const ry = gsap.quickTo(el, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+    const max = el.matches('.card, .contact-line, .together > div, .fi-item') ? 5 : 7;
+    el.addEventListener('pointermove', (e) => {
+      if (!arm()) return;
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      ry((x - 0.5) * max * 2);
+      rx(-(y - 0.5) * max * 2);
+      el.style.setProperty('--gx', `${x * 100}%`);
+      el.style.setProperty('--gy', `${y * 100}%`);
+    });
+    el.addEventListener('pointerleave', () => {
+      rx(0);
+      ry(0);
+    });
+  });
+}
+initTilt();
+
+/* ---------------- footer: spotlight wordmark ---------------- */
+const footerWord = document.querySelector<HTMLElement>('.footer-word');
+const footer = document.querySelector<HTMLElement>('.footer');
+if (footerWord && footer && fineMQ.matches) {
+  footer.addEventListener('pointermove', (e) => {
+    const r = footerWord.getBoundingClientRect();
+    footerWord.style.setProperty('--fx', `${e.clientX - r.left}px`);
+    footerWord.style.setProperty('--fy', `${e.clientY - r.top}px`);
+    footerWord.classList.add('is-lit');
+  });
+  footer.addEventListener('pointerleave', () => footerWord.classList.remove('is-lit'));
+}
+
+/* ---------------- 3D logo orbit ---------------- */
+document.querySelectorAll<HTMLElement>('[data-orbit]').forEach((ring) => {
+  if (!motionOK()) return;
+  const items = Array.from(ring.querySelectorAll<HTMLElement>('li'));
+  ring.classList.add('is-3d');
+  let angle = 0;
+  let boost = 0;
+  let visible = false;
+  new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(ring);
+  ScrollTrigger.create({ trigger: ring, start: 'top bottom', end: 'bottom top', onUpdate: (st) => (boost = Math.min(3, Math.abs(st.getVelocity()) / 600)) });
+  let paused = false;
+  ring.addEventListener('pointerenter', () => (paused = true));
+  ring.addEventListener('pointerleave', () => (paused = false));
+  gsap.ticker.add((_t, dt) => {
+    if (!visible) return;
+    boost *= 0.95;
+    if (!paused) angle += (dt / 1000) * (0.16 + boost * 0.5);
+    const R = ring.clientWidth * 0.42;
+    items.forEach((li, i) => {
+      const th = angle + (i / items.length) * Math.PI * 2;
+      const z = Math.cos(th);
+      const x = Math.sin(th) * R;
+      const depth = (z + 1) / 2; // 0 back → 1 front
+      li.style.transform = `translate3d(${x}px, ${-(1 - depth) * 46}px, ${z * R * 0.6}px) scale(${0.6 + depth * 0.5})`;
+      li.style.opacity = String(0.12 + depth * 0.88);
+      li.style.zIndex = String(Math.round(depth * 100));
+    });
+  });
+});
+
+/* inner-page hero: projector light shader (falls back to CSS glow) */
+const lightHost = document.querySelector<HTMLElement>('.page-hero[data-glow]');
+if (lightHost && motionOK() && !(navigator as any).connection?.saveData) {
+  const go = () => import('./lightfield').then((m) => m.initLightField(lightHost, gsap.ticker));
+  'requestIdleCallback' in window ? (window as any).requestIdleCallback(go, { timeout: 1200 }) : setTimeout(go, 300);
+}
+
 /* hero glow follows pointer on inner pages */
 const glow = document.querySelector<HTMLElement>('[data-glow]');
 if (glow && fineMQ.matches && motionOK()) {
@@ -315,6 +405,7 @@ document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((m) => {
 const modules = new Set(Array.from(document.querySelectorAll<HTMLElement>('[data-module]')).map((el) => el.dataset.module));
 if (modules.has('home')) import('./home').then((m) => m.initHome({ gsap, ScrollTrigger, motionOK }));
 if (modules.has('form')) import('./forms').then((m) => m.initForms());
+if (modules.has('haus')) import('./hausboot').then((m) => m.initHaus());
 if (modules.has('filter')) import('./filter').then((m) => m.initFilter());
 
 window.addEventListener('load', () => ScrollTrigger.refresh());

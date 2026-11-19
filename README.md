@@ -46,5 +46,8 @@ Common tasks:
 ## How it's built
 
 - **Hero:** ~9k GPU particles (4k on mobile) gather into HEKAYAHAUS. The crisp HTML word resolves out of the light, then the dust releases into atmosphere as BEYOND SEEN. INTO FELT. appears. The pointer gently parts the dust. The final CTA reforms the dust into the H mark as you scroll. One draw call per scene, rendering pauses offscreen and in hidden tabs, and the scenes are skipped on low-power devices or Save-Data.
+- **Three Pillars → One Haus (3D):** the H mark, traced from the brand logo into six extruded obsidian pieces (`src/data/hmark.json`), assembles pillar by pillar as you scroll: 01 Marketing (left ribbons), 02 Performance (corner blocks), 03 Growth (right ribbons). The section pins on desktop. The same object appears on About as a draggable piece. Code: `src/scripts/haus3d.ts`.
+- **Projector light:** inner-page heroes have a pointer-reactive light-beam shader written in raw WebGL with no library (`src/scripts/lightfield.ts`).
+- **Depth everywhere:** 3D headline flips, images that unfold in perspective, tilt and light glare on cards and work, a coverflow work rail with scroll-velocity skew, a 3D process card deck, a 3D logo orbit, legacy type rotating in depth, and a spotlight on the footer wordmark.
 - **Progressive enhancement:** every word is real HTML. With JavaScript off, WebGL unavailable or reduced motion on, the full site renders without the effects.
 - **SEO / AI search:** per-page titles and meta, Open Graph, JSON-LD (Organization, WebSite, Service, FAQPage, CreativeWork, Article), `sitemap.xml`, `robots.txt` and `llms.txt`.

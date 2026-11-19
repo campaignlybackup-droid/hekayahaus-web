@@ -861,7 +861,9 @@ body::after {
   letter-spacing: -0.05em;
   text-transform: uppercase;
   white-space: nowrap;
-  background: linear-gradient(180deg, rgba(239, 235, 227, 0.16), rgba(239, 235, 227, 0.02) 85%);
+  background:
+    radial-gradient(circle 260px at var(--fx, -999px) var(--fy, -999px), rgba(255, 179, 92, 0.95), rgba(255, 179, 92, 0.25) 45%, transparent 70%),
+    linear-gradient(180deg, rgba(239, 235, 227, 0.16), rgba(239, 235, 227, 0.02) 85%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -988,7 +990,9 @@ body::after {
   transform: none;
 }
 .motion [data-reveal='scale'] {
-  transform: scale(0.96);
+  transform: perspective(1400px) translate3d(0, 60px, 0) rotateX(16deg) scale(0.94);
+  transform-origin: 50% 0%;
+  transition-duration: 1.2s, 1.4s;
 }
 .motion [data-reveal].in {
   opacity: 1;
@@ -1000,14 +1004,33 @@ body::after {
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
 }
+.motion .split-line {
+  perspective: 700px;
+  perspective-origin: 50% 100%;
+}
 .motion .split-line > span {
   display: block;
-  transform: translate3d(0, 105%, 0);
+  transform-origin: 50% 100%;
+  transform: translate3d(0, 105%, 0) rotateX(-75deg);
   transition: transform 1.15s var(--e-expo);
   transition-delay: calc(var(--i, 0) * 90ms + var(--delay, 0ms));
 }
 .motion [data-split].in .split-line > span {
   transform: none;
+}
+
+/* above-the-fold page titles animate from CSS alone (no wait for JS) */
+.motion .page-hero [data-split] .split-line > span {
+  animation: line-up 1.15s var(--e-expo) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+}
+@keyframes line-up {
+  from {
+    transform: translate3d(0, 105%, 0) rotateX(-75deg);
+  }
+  to {
+    transform: none;
+  }
 }
 
 /* media */
@@ -1752,6 +1775,89 @@ fieldset.field {
   overflow-wrap: break-word;
 }
 
+/* ---------- 3D tilt + glare ---------- */
+.tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilting {
+  transition-property: opacity, border-color, background-color, box-shadow, color !important;
+}
+.glare {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 228, 190, 0.26), rgba(255, 179, 92, 0.06) 30%, transparent 55%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.45s var(--e-out);
+}
+.tilt:hover .glare {
+  opacity: 1;
+}
+.tilting:hover {
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 179, 92, 0.12);
+}
+
+/* ---------- light-field shader host ---------- */
+.lightfield {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.has-lightfield::before {
+  opacity: 0.45;
+}
+
+/* ---------- 3D logo orbit ---------- */
+.orbit {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px 56px;
+}
+.orbit.is-3d {
+  display: block;
+  height: clamp(200px, 22vw, 300px);
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+.orbit.is-3d li {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: calc(var(--lh) / -2) 0 0 -75px;
+  width: 150px;
+  will-change: transform, opacity;
+}
+.orbit.is-3d li img {
+  opacity: 1;
+}
+.orbit-wrap {
+  position: relative;
+}
+.orbit-wrap::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 6%;
+  height: 40px;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 179, 92, 0.16), transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
 /* ---------- page transitions ---------- */
 @view-transition {
   navigation: auto;
@@ -1801,4 +1907,7 @@ fieldset.field {
   ::view-transition-new(root) {
     animation: none;
   }
+}
+.orbit:not(.is-3d) .orbit-dup {
+  display: none;
 }
