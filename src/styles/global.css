@@ -78,8 +78,8 @@
   --f-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
 
   --t-mega: clamp(2.6rem, 11.4vw, 13rem);
-  --t-xxl: clamp(2.6rem, 7.2vw, 7.4rem);
-  --t-xl: clamp(2.2rem, 5.2vw, 5rem);
+  --t-xxl: clamp(2.05rem, 7.2vw, 7.4rem);
+  --t-xl: clamp(1.85rem, 5.2vw, 5rem);
   --t-l: clamp(1.75rem, 3.4vw, 3.25rem);
   --t-m: clamp(1.3rem, 2vw, 1.9rem);
   --t-body-l: clamp(1.08rem, 1.25vw, 1.3rem);
@@ -210,7 +210,7 @@ ol[role='list'] {
 body::after {
   content: '';
   position: fixed;
-  inset: -50%;
+  inset: 0;
   z-index: 90;
   pointer-events: none;
   opacity: 0.05;
@@ -249,7 +249,8 @@ body::after {
   width: 100%;
   max-width: var(--max);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
 }
 .section {
   position: relative;
@@ -690,7 +691,7 @@ body::after {
   z-index: 70;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--nav-h) + 24px) var(--gutter) 32px;
+  padding: calc(var(--nav-h) + 24px) max(var(--gutter), env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
   background: var(--ink-0);
   clip-path: inset(0 0 100% 0);
   visibility: hidden;
@@ -766,11 +767,18 @@ body::after {
   }
 }
 
+@media (max-height: 520px) and (orientation: landscape) {
+  .mobile-menu .mm-link {
+    font-size: clamp(1.4rem, 5vh, 2rem);
+    padding: 6px 0;
+  }
+}
+
 /* ---------- footer ---------- */
 .footer {
   position: relative;
   padding-top: clamp(80px, 10vw, 160px);
-  padding-bottom: 32px;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
   background: var(--ink-1);
   border-top: 1px solid var(--line);
   overflow: hidden;
@@ -793,7 +801,7 @@ body::after {
   margin-top: 28px;
   color: var(--ivory);
 }
-.footer h3 {
+.footer h2 {
   margin-bottom: 18px;
 }
 .footer ul {
@@ -856,7 +864,7 @@ body::after {
   font-family: var(--f-display);
   font-weight: 830;
   font-stretch: 125%;
-  font-size: clamp(2.2rem, 10.2vw, 12.2rem);
+  font-size: min(12.2rem, calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 9));
   line-height: 0.8;
   letter-spacing: -0.05em;
   text-transform: uppercase;
@@ -997,8 +1005,8 @@ body::after {
 .motion .split-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
+  padding: 0 0.12em 0.12em;
+  margin: 0 -0.12em -0.12em;
 }
 .motion .split-line > span {
   display: block;
@@ -1145,6 +1153,9 @@ a:focus-visible .media-zoom img {
     opacity var(--d-med),
     visibility 0s linear var(--d-med);
 }
+.reel-modal[hidden] {
+  display: none;
+}
 .reel-modal.is-open {
   opacity: 1;
   visibility: visible;
@@ -1153,6 +1164,7 @@ a:focus-visible .media-zoom img {
 .reel-frame {
   position: relative;
   width: min(100%, 1400px, calc((100vh - 140px) * 16 / 9));
+  width: min(100%, 1400px, calc((100dvh - 140px) * 16 / 9));
   aspect-ratio: 16 / 9;
   border-radius: var(--r-m);
   overflow: hidden;
@@ -1163,10 +1175,12 @@ a:focus-visible .media-zoom img {
 .reel-modal.is-open .reel-frame {
   transform: none;
 }
-.reel-frame iframe {
+.reel-frame iframe,
+.reel-frame video {
   width: 100%;
   height: 100%;
   border: 0;
+  background: #000;
 }
 .reel-close {
   position: absolute;
@@ -1188,6 +1202,27 @@ a:focus-visible .media-zoom img {
 .reel-close:hover {
   background: var(--ivory);
   color: var(--ink-0);
+}
+@media (max-height: 520px) {
+  .reel-modal {
+    padding: 12px 72px;
+  }
+  .reel-title {
+    display: none;
+  }
+  .reel-frame {
+    width: min(100%, calc((100dvh - 24px) * 16 / 9));
+  }
+  .reel-close {
+    top: 10px;
+    right: 10px;
+    padding: 0 14px;
+    font-size: 0;
+    gap: 0;
+  }
+  .reel-close span {
+    font-size: 1rem;
+  }
 }
 .reel-title {
   position: absolute;
@@ -1711,6 +1746,11 @@ fieldset.field {
   letter-spacing: -0.045em;
   text-transform: uppercase;
 }
+@supports (font-size: 1cqi) {
+  .pillar-name {
+    font-size: min(6.4rem, 9.7cqi);
+  }
+}
 /* ---------- faq ---------- */
 .faq-grid {
   display: grid;
@@ -1738,6 +1778,14 @@ fieldset.field {
 .page-hero-body > * {
   min-width: 0;
 }
+@media (max-width: 420px) {
+  .h-xxl,
+  .h-xl,
+  .h-l {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+}
 @media (max-width: 480px) {
   .btn {
     white-space: normal;
@@ -1750,6 +1798,36 @@ fieldset.field {
 .h-xxl,
 .h-xl {
   overflow-wrap: break-word;
+}
+
+/* ambient loop video */
+.loop-video {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.loop-video img,
+.loop-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.loop-video video {
+  opacity: 0;
+  transition: opacity 0.9s var(--e-out);
+}
+.loop-video.is-playing video {
+  opacity: 1;
+}
+
+/* links inside running text are underlined, not colour-only */
+main p a:not(.btn):not(.link-arrow),
+.legal a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 /* ---------- page transitions ---------- */

@@ -20,7 +20,9 @@
       "instagram": "https://www.instagram.com/hekayahaus/",
       "linkedin": "https://www.linkedin.com/company/hekayahaus-fzc-llc/",
       "youtube": "https://www.youtube.com/@HekayaHaus"
-    }
+    },
+    "playlist": "https://www.youtube.com/playlist?list=PLk53-jXewhhfX-5Pxq_Ywe3ByEmBkgEgJ",
+    "notAnAgency": "A Haus where creativity, media and technology converge. We craft cinematic narratives, world-class events and integrated, data-driven marketing."
   },
   "logos": [
     {
@@ -149,7 +151,7 @@
     },
     {
       "q": "Where is Hekaya Haus located and which areas do you serve?",
-      "a": "We are based in Dubai, UAE and serve clients across the UAE, GCC, and India, on-location production."
+      "a": "We are based in Dubai, UAE and serve clients across the UAE, GCC, India and the USA, with on-location production."
     },
     {
       "q": "How much do your marketing and production services cost in Dubai?",
@@ -157,11 +159,11 @@
     },
     {
       "q": "Why should I choose Hekaya Haus over other agencies in Dubai?",
-      "a": "We combine cinematic storytelling, advanced AI tools, in-house production, and full-stack development — delivering end-to-end solutions with measurable ROI."
+      "a": "We combine cinematic storytelling, advanced AI tools, in-house 360 production, and full-stack development — delivering end-to-end solutions with measurable ROI."
     },
     {
       "q": "Do you offer AI-powered solutions?",
-      "a": "Yes — AI agents, AI chatbots, AI translation, AI marketing automation, and smart content generation."
+      "a": "Yes — AI agents and AI automation, AI chatbots, AI translation, AI character development, AI marketing automation, and smart content generation."
     }
   ],
   "pillars": [
@@ -417,7 +419,7 @@
         "360 Mapping"
       ],
       "metaTitle": "Media Production Company Dubai | HekayaHaus",
-      "metaDescription": "Professional media production in Dubai — campaigns, commercials, cinematic video, drone & FPV, photography, CGI & VFX. Book a free quote today.",
+      "metaDescription": "Professional media production in Dubai — campaigns, cinematic video, FPV drone, photography, CGI & VFX. Trusted by Porsche, Nike, Red Bull. Book a free quote today.",
       "image": "auto-mercedes-dubai",
       "gallery": [
         "auto-cockpit",
@@ -429,6 +431,10 @@
         {
           "title": "Campaign Production",
           "body": "One connected idea produced across film, photography and social formats for launches, promotions and brand awareness."
+        },
+        {
+          "title": "Professional Photography",
+          "body": "Studio and location photography for products, real estate, fashion, and corporate needs."
         },
         {
           "title": "Cinematic Videography",
@@ -462,7 +468,7 @@
       "faqs": [
         {
           "q": "What types of video production do you offer in Dubai?",
-          "a": "We offer commercials, brand stories, FPV drone videos, event videography, interviews, and product showcase videos."
+          "a": "We specialize in cinematic commercials, corporate videos, documentaries, event coverage, product videos, and drone cinematography."
         },
         {
           "q": "How long does a professional video production project take in Dubai?",
@@ -529,6 +535,10 @@
         {
           "title": "Performance Analytics",
           "body": "Detailed monthly reports with insights and recommendations."
+        },
+        {
+          "title": "Influencer Marketing",
+          "body": "Strategic collaborations with relevant UAE influencers."
         }
       ],
       "faqs": [
@@ -543,6 +553,10 @@
         {
           "q": "What is AI translation and AI character development in marketing?",
           "a": "AI translation enables multilingual content for GCC markets. AI characters are digital spokespersons for 24/7 engagement and storytelling."
+        },
+        {
+          "q": "Do you work with influencers in Dubai?",
+          "a": "Yes. We handle influencer discovery, contracting, campaign management, and performance tracking."
         }
       ]
     },
@@ -594,6 +608,10 @@
         {
           "title": "Performance Analytics",
           "body": "Detailed reporting with insights and recommendations for what comes next."
+        },
+        {
+          "title": "SEO & Organic Growth",
+          "body": "Search engine optimization to increase visibility and organic traffic."
         }
       ],
       "faqs": [
@@ -663,6 +681,14 @@
         {
           "title": "Billboard & Large Format 3D Design",
           "body": "Eye-catching 3D billboard creatives and animations."
+        },
+        {
+          "title": "Architectural Visualization",
+          "body": "Photorealistic 3D walkthroughs for real estate developers."
+        },
+        {
+          "title": "Character Animation & Avatars",
+          "body": "Custom animated characters and AI digital spokespersons."
         }
       ],
       "faqs": [
@@ -681,6 +707,10 @@
         {
           "q": "What is FOOH (Fake Out Of Home) advertising?",
           "a": "It is a trending digital technique that creates viral illusions in public spaces using CGI and video."
+        },
+        {
+          "q": "Can you create 3D product visualization and animation?",
+          "a": "Yes — perfect for real estate, automotive, luxury products, and architectural visualization."
         }
       ]
     },
@@ -886,6 +916,10 @@
         {
           "q": "How early should we book event production services?",
           "a": "We recommend booking 2–6 months in advance for large events in Dubai."
+        },
+        {
+          "q": "Do you provide event photography and videography?",
+          "a": "Yes, full coverage including cinematic highlights and live streaming."
         }
       ]
     },
@@ -946,6 +980,14 @@
         {
           "q": "How long does audio post-production take?",
           "a": "Voiceovers and mixing take 2–5 days; full custom music composition takes 1–3 weeks."
+        },
+        {
+          "q": "Can you create original music for commercials?",
+          "a": "Yes, our composers create custom tracks and jingles tailored to your brand."
+        },
+        {
+          "q": "Do you offer dubbing services?",
+          "a": "Yes, professional dubbing for videos, films, and advertisements in multiple languages."
         }
       ]
     }
@@ -1250,6 +1292,14 @@
       "ref": "2_CSwS6nG6o",
       "poster": "showreel-poster",
       "watchUrl": "https://youtu.be/2_CSwS6nG6o"
+    },
+    "brandFilm": {
+      "id": "brand-film",
+      "title": "HekayaHaus — Brand Film",
+      "provider": "file",
+      "ref": "/media/video/haus-film-720.mp4",
+      "poster": "haus-film-poster",
+      "watchUrl": "/media/video/haus-film-720.mp4"
     }
   },
   "images": {
@@ -1531,6 +1581,105 @@
         2200
       ],
       "alt": "HekayaHaus showreel title frames"
+    },
+    "haus-film-poster": {
+      "w": 1280,
+      "h": 720,
+      "widths": [
+        480,
+        960,
+        1280
+      ],
+      "alt": "Frame from the HekayaHaus brand film"
     }
-  }
+  },
+  "whyChoose": [
+    {
+      "t": "Creative Meets Strategy",
+      "b": "Our work lives at the intersection of art and analytics. Every concept, campaign, and cinematic shot is backed by insight, crafted to look beautiful and perform brilliantly."
+    },
+    {
+      "t": "Trusted by Visionaries",
+      "b": "From luxury brands and automotive giants to lifestyle startups and events — we’ve partnered with clients who dream big and expect results that last. Our reputation is built on discretion, reliability, and creative excellence."
+    },
+    {
+      "t": "Future-Ready Creativity",
+      "b": "AI-driven marketing, immersive experiences, and digital-first storytelling — we evolve faster than the trends. Hekaya Haus isn’t just keeping up with the future — we’re designing it."
+    },
+    {
+      "t": "Story First, Always",
+      "b": "Every brand has a story — but not everyone can tell it right. At Hekaya Haus, storytelling is our foundation. We don’t just make visuals; we build emotions that connect audiences to your brand’s soul."
+    }
+  ],
+  "signature": [
+    {
+      "t": "FPV drone & aerial cinematography",
+      "b": "Dynamic perspectives that make every scene feel larger than life.",
+      "to": "/media-production-dubai"
+    },
+    {
+      "t": "CGI, VFX & 3D motion",
+      "b": "We build worlds beyond imagination — from hyper-real visuals to full-scale cinematic environments.",
+      "to": "/graphics-dubai"
+    },
+    {
+      "t": "PR, media buying & digital publishing",
+      "b": "Your story, seen and heard — everywhere it matters.",
+      "to": "/pr-influencer-marketing-dubai"
+    },
+    {
+      "t": "Ad campaigns (Meta, Google, TikTok, YT)",
+      "b": "Creative storytelling meets smart distribution — across Meta, Google, TikTok, and YouTube.",
+      "to": "/performance-marketing-dubai"
+    },
+    {
+      "t": "Voiceover, audio mixing & mastering",
+      "b": "Where every frequency meets feeling — polished sound for cinematic impact.",
+      "to": "/audio-direction-dubai"
+    },
+    {
+      "t": "Graphic Designing & Branding",
+      "b": "Identity, elevated. From timeless logos to visual systems — we build brands that look as iconic as they feel.",
+      "to": "/graphics-dubai"
+    }
+  ],
+  "helpCards": [
+    {
+      "t": "Media & Production",
+      "b": "Cinematic videography, photography, FPV drone, editing, CGI & VFX.",
+      "to": "/media-production-dubai"
+    },
+    {
+      "t": "Marketing & Social",
+      "b": "Content, creative campaigns, data-driven ads, influencer & talent partnerships.",
+      "to": "/content-marketing-dubai"
+    },
+    {
+      "t": "Motion Graphics & CGI",
+      "b": "Graphics, branding, motion graphics, CGI, 3D animation, stage designing, billboard designing.",
+      "to": "/graphics-dubai"
+    },
+    {
+      "t": "PR & Events",
+      "b": "Event organising, celebrity management, concerts, shoots & activations.",
+      "to": "/event-organise-dubai"
+    },
+    {
+      "t": "Web & Tech",
+      "b": "Web design, e-commerce, custom CRM, AI marketing automation.",
+      "to": "/web-development-dubai"
+    },
+    {
+      "t": "Audio Composition & Voiceover",
+      "b": "Music, voiceover, dubbing, music production, music composition, audio engineering.",
+      "to": "/audio-direction-dubai"
+    }
+  ],
+  "moreClients": [
+    "NOYA",
+    "Superkicks",
+    "Toramanian Jewellers",
+    "Shewak",
+    "Skyvertise"
+  ]
 }

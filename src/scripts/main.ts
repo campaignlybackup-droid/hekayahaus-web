@@ -140,9 +140,10 @@ const setMenu = (open: boolean) => {
   menuBtn?.setAttribute('aria-expanded', String(open));
   menuBtn?.querySelector('.menu-label')!.replaceChildren(open ? 'Close' : 'Menu');
   scrollLock(open);
+  if (menu) menu.inert = !open;
   if (open) {
     nav?.classList.remove('is-hidden');
-    menu?.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
+    requestAnimationFrame(() => menu?.querySelector<HTMLElement>('a')?.focus({ preventScroll: true }));
   }
 };
 menuBtn?.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
@@ -163,32 +164,53 @@ const modal = document.getElementById('reel-modal');
 const frame = modal?.querySelector<HTMLElement>('[data-reel-frame]');
 const reelTitle = modal?.querySelector<HTMLElement>('#reel-title');
 let lastFocus: HTMLElement | null = null;
+let closeTimer = 0;
 const closeReel = () => {
   if (!modal) return;
   modal.classList.remove('is-open');
   scrollLock(false);
-  setTimeout(() => {
+  frame?.querySelector('video')?.pause();
+  closeTimer = window.setTimeout(() => {
     modal.hidden = true;
     frame?.replaceChildren();
   }, 320);
-  lastFocus?.focus();
+  lastFocus?.focus({ preventScroll: true });
 };
 document.addEventListener('click', (e) => {
   const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-reel]');
   if (!trigger || !modal || !frame) return;
   e.preventDefault();
+  clearTimeout(closeTimer);
   lastFocus = trigger;
-  const iframe = document.createElement('iframe');
-  iframe.src = trigger.dataset.reel!;
-  iframe.title = trigger.dataset.reelTitle || 'HekayaHaus showreel';
-  iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  iframe.allowFullscreen = true;
-  frame.replaceChildren(iframe);
-  if (reelTitle) reelTitle.textContent = trigger.dataset.reelTitle || 'Showreel';
+  const src = trigger.dataset.reel!;
+  const title = trigger.dataset.reelTitle || 'HekayaHaus showreel';
+  let player: HTMLElement;
+  if (/\.mp4($|\?)/.test(src)) {
+    const v = document.createElement('video');
+    v.src = src;
+    v.controls = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+    v.setAttribute('aria-label', title);
+    if (trigger.dataset.reelPoster) v.poster = trigger.dataset.reelPoster;
+    player = v;
+  } else {
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.title = title;
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    iframe.allowFullscreen = true;
+    player = iframe;
+  }
+  frame.replaceChildren(player);
+  if (reelTitle) reelTitle.textContent = title;
   modal.hidden = false;
-  requestAnimationFrame(() => modal.classList.add('is-open'));
   scrollLock(true);
-  modal.querySelector<HTMLElement>('[data-reel-close]')?.focus();
+  requestAnimationFrame(() => {
+    modal.classList.add('is-open');
+    modal.querySelector<HTMLElement>('[data-reel-close]')?.focus({ preventScroll: true });
+  });
 });
 modal?.addEventListener('click', (e) => {
   if (e.target === modal || (e.target as HTMLElement).closest('[data-reel-close]')) closeReel();
@@ -196,15 +218,14 @@ modal?.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modal?.classList.contains('is-open')) closeReel();
   if (e.key === 'Tab' && modal?.classList.contains('is-open')) {
-    const focusables = modal.querySelectorAll<HTMLElement>('button, iframe');
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
+    const f = Array.from(modal.querySelectorAll<HTMLElement>('button, iframe, video'));
+    const i = f.indexOf(document.activeElement as HTMLElement);
+    if (e.shiftKey && i <= 0) {
       e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
+      f[f.length - 1].focus();
+    } else if (!e.shiftKey && (i === -1 || i === f.length - 1)) {
       e.preventDefault();
-      first.focus();
+      f[0].focus();
     }
   }
 });
@@ -215,26 +236,6 @@ document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
     const r = card.getBoundingClientRect();
     card.style.setProperty('--mx', `${e.clientX - r.left}px`);
     card.style.setProperty('--my', `${e.clientY - r.top}px`);
-  });
-});
-
-/* ---------------- counters ---------------- */
-document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-  const target = Number(el.dataset.count);
-  if (!motionOK()) return;
-  const obj = { v: 0 };
-  el.textContent = '0';
-  ScrollTrigger.create({
-    trigger: el,
-    start: 'top 88%',
-    once: true,
-    onEnter: () =>
-      gsap.to(obj, {
-        v: target,
-        duration: 1.8,
-        ease: 'expo.out',
-        onUpdate: () => (el.textContent = String(Math.round(obj.v))),
-      }),
   });
 });
 
@@ -293,7 +294,35 @@ function initPointer() {
     });
   });
 }
-initPointer();
+/* ---------------- counters ---------------- */
+function initCounters() {
+document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+  const target = Number(el.dataset.count);
+  if (!motionOK()) return;
+  const obj = { v: 0 };
+  el.textContent = '0';
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 88%',
+    once: true,
+    onEnter: () =>
+      gsap.to(obj, {
+        v: target,
+        duration: 1.8,
+        ease: 'expo.out',
+        onUpdate: () => (el.textContent = String(Math.round(obj.v))),
+      }),
+  });
+});
+}
+
+/* Non-critical enhancements wait for an idle moment so they never compete with first paint. */
+const idle = (fn: () => void) =>
+  'requestIdleCallback' in window ? (window as any).requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 300);
+idle(() => {
+  initCounters();
+  initPointer();
+});
 
 /* hero glow follows pointer on inner pages */
 const glow = document.querySelector<HTMLElement>('[data-glow]');
@@ -311,10 +340,36 @@ document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((m) => {
   io.observe(m);
 });
 
+/* ---------------- ambient loop videos ---------------- */
+{
+  const vids = document.querySelectorAll<HTMLVideoElement>('[data-loop-video]');
+  const saveData = (navigator as any).connection?.saveData;
+  if (vids.length && motionOK() && !saveData && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) {
+            if (!v.src) {
+              v.src = window.innerWidth < 768 ? v.dataset.sm! : v.dataset.lg!;
+              v.addEventListener('playing', () => v.parentElement?.classList.add('is-playing'), { once: true });
+            }
+            v.play().catch(() => {});
+          } else if (v.src) v.pause();
+        });
+      },
+      { rootMargin: '200px 0px' },
+    );
+    vids.forEach((v) => io.observe(v));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) vids.forEach((v) => v.pause());
+    });
+  }
+}
+
 /* ---------------- page modules ---------------- */
 const modules = new Set(Array.from(document.querySelectorAll<HTMLElement>('[data-module]')).map((el) => el.dataset.module));
 if (modules.has('home')) import('./home').then((m) => m.initHome({ gsap, ScrollTrigger, motionOK }));
 if (modules.has('form')) import('./forms').then((m) => m.initForms());
 if (modules.has('filter')) import('./filter').then((m) => m.initFilter());
 
-window.addEventListener('load', () => ScrollTrigger.refresh());

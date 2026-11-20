@@ -1,7 +1,7 @@
 import content from './content.json';
 
 export type ImageMeta = { w: number; h: number; widths: number[]; alt: string };
-export type Video = { id: string; title: string; provider: 'youtube' | 'vimeo'; ref: string; poster: string; watchUrl: string };
+export type Video = { id: string; title: string; provider: 'youtube' | 'vimeo' | 'file'; ref: string; poster: string; watchUrl: string };
 export type Service = (typeof content.services)[number];
 export type Pillar = (typeof content.pillars)[number];
 export type Project = (typeof content.projects)[number];
@@ -24,7 +24,14 @@ export const featuredProjectSlugs = content.featuredProjects;
 export const insightCategories = content.insightCats;
 export const articles = content.articles;
 
-export const videos = content.videos as Record<'showreel' | 'productionReel', Video>;
+export const videos = content.videos as Record<'showreel' | 'productionReel' | 'brandFilm', Video>;
+
+/** From the live site: why-choose-us points, signature capabilities and service overview cards. */
+export const whyChoose = content.whyChoose;
+export const signature = content.signature;
+export const helpCards = content.helpCards;
+/** Further clients named in the HekayaHaus brand film (no logo files yet). */
+export const moreClients = content.moreClients;
 
 /**
  * Showreels. The brief plans one combined showreel plus one reel per service.
@@ -82,6 +89,8 @@ export const projectsByPillar = (id: string) => projects.filter((p) => p.pillar 
 export const pillarById = (id: string) => pillars.find((p) => p.id === id)!;
 
 export const youtubeEmbed = (v: Video) =>
-  v.provider === 'youtube'
+  v.provider === 'file'
+    ? v.ref
+    : v.provider === 'youtube'
     ? `https://www.youtube-nocookie.com/embed/${v.ref}?autoplay=1&rel=0&modestbranding=1&playsinline=1`
     : `https://player.vimeo.com/video/${v.ref}?autoplay=1&title=0&byline=0&portrait=0`;

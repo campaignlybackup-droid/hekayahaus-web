@@ -53,7 +53,7 @@ const ld = {
             <h3>{s.link ? <a href={s.link}>{s.name}</a> : s.name}</h3>
             <div class="body-copy">
               {s.body.map((b) => <p>{b}</p>)}
-              {s.link && <a class="link-arrow" href={s.link}>Learn more <Icon name="arrow" /></a>}
+              {s.link && <a class="link-arrow" href={s.link}>Learn more<span class="sr-only"> about {s.name}</span> <Icon name="arrow" /></a>}
             </div>
           </li>
         ))}
@@ -71,7 +71,7 @@ const ld = {
               <span class="num">{s.ticker.slice(0, 3).join(' · ')}</span>
               <h3 class="h-m">{s.name}</h3>
               <p>{s.intro}</p>
-              <span class="link-arrow" style="margin-top:18px">Explore <Icon name="arrow" /></span>
+              <span class="link-arrow" style="margin-top:18px">Explore<span class="sr-only"> {s.name}</span> <Icon name="arrow" /></span>
             </a>
           ))}
         </div>

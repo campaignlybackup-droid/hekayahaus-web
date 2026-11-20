@@ -15,6 +15,93 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
   const late = hero.querySelectorAll<HTMLElement>('[data-hero-late]');
   const motion = motionOK();
 
+  /* Scroll-driven layout (rail height, scrubs) is registered first, before any await,
+     so it is in place before the visitor can scroll. */
+  /* ---------- statement: words light up as you read ---------- */
+  document.querySelectorAll<HTMLElement>('[data-scrub-words]').forEach((el) => {
+    const words = el.querySelectorAll('.w');
+    if (!motion) return;
+    gsap.fromTo(
+      words,
+      { opacity: 0.55 },
+      {
+        opacity: 1,
+        ease: 'none',
+        stagger: 0.08,
+        scrollTrigger: { trigger: el, start: 'top 82%', end: 'bottom 52%', scrub: 0.6 },
+      },
+    );
+  });
+
+  /* ---------- pillars: stacked cards recede as the next arrives ---------- */
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    const cards = gsap.utils.toArray<HTMLElement>('.pillar-card');
+    cards.forEach((card, i) => {
+      const next = cards[i + 1];
+      if (!next) return;
+      gsap.to(card.querySelector('.pillar-inner'), {
+        scale: 0.94,
+        opacity: 0.35,
+        ease: 'none',
+        scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true },
+      });
+    });
+
+    /* legacy line drifts sideways with scroll */
+    gsap.utils.toArray<HTMLElement>('[data-drift]').forEach((el) => {
+      const dir = Number(el.dataset.drift) || -1;
+      gsap.fromTo(el, { xPercent: dir > 0 ? -12 : 4 }, { xPercent: dir > 0 ? 4 : -12, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+    });
+
+    /* featured work: horizontal rail. CSS position: sticky holds the rail in view (no
+       pin-spacer reflow, so no layout shift); scroll progress through the tall wrapper
+       drives the track sideways. */
+    const wrap = document.querySelector<HTMLElement>('[data-rail-wrap]');
+    const rail = wrap?.querySelector<HTMLElement>('[data-rail]');
+    const track = rail?.querySelector<HTMLElement>('.rail-track');
+    if (wrap && rail && track) {
+      wrap.classList.add('is-pinned');
+      const dist = () => Math.max(0, track.scrollWidth - rail.clientWidth);
+      const setH = () => {
+        wrap.style.height = `${window.innerHeight + dist()}px`;
+      };
+      setH();
+      ScrollTrigger.addEventListener('refreshInit', setH);
+      gsap.to(track, {
+        x: () => -dist(),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: wrap,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.8,
+          invalidateOnRefresh: true,
+          onUpdate: (st) => rail.style.setProperty('--p', String(st.progress)),
+        },
+      });
+      return () => {
+        ScrollTrigger.removeEventListener('refreshInit', setH);
+        wrap.classList.remove('is-pinned');
+        wrap.style.height = '';
+        gsap.set(track, { clearProps: 'transform' });
+      };
+    }
+  });
+
+  /* ---------- process: active step drives the image stack ---------- */
+  const steps = document.querySelectorAll<HTMLElement>('[data-step]');
+  const frames = document.querySelectorAll<HTMLElement>('[data-step-img]');
+  const bar = document.querySelector<HTMLElement>('[data-step-bar]');
+  const setStep = (n: number) => {
+    steps.forEach((s, i) => s.classList.toggle('is-active', i === n));
+    frames.forEach((f, i) => f.classList.toggle('is-active', i === n));
+    bar?.style.setProperty('--p', String((n + 1) / steps.length));
+  };
+  steps.forEach((s, i) => {
+    ScrollTrigger.create({ trigger: s, start: 'top 60%', end: 'bottom 60%', onToggle: (st) => st.isActive && setStep(i) });
+  });
+
   /* ---------- 3D dust (progressive enhancement) ----------
      The intro never waits more than ~700ms for WebGL; if the chunk is late, the
      sequence runs in pure HTML/CSS and the dust fades in afterwards as atmosphere. */
@@ -30,7 +117,9 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
       const wordCount = t === 2 ? 9000 : 4200;
       const ambientCount = t === 2 ? 3800 : 1600;
       const d = new mod.DustScene(canvas, mod.textTargets(word, canvas, wordCount), { wordCount, ambientCount, size: t === 2 ? 3.6 : 3.0 });
-      gsap.ticker.add(d.tick);
+      // compile the shader off the critical path where the driver allows it
+      if (d.renderer.extensions.has('KHR_parallel_shader_compile')) d.renderer.compileAsync(d.scene, d.camera).catch(() => {}).finally(() => gsap.ticker.add(d.tick));
+      else gsap.ticker.add(d.tick);
       hero.classList.add('has-dust');
       return d;
     } catch {
@@ -69,7 +158,8 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
     const gr = group.getBoundingClientRect();
     const wr = word.getBoundingClientRect();
     const hr = hero.getBoundingClientRect();
-    const offset = hr.top + hr.height / 2 - (wr.top + wr.height / 2);
+    // centre the name in what is actually visible (short landscape screens have a taller hero)
+    const offset = hr.top + Math.min(hr.height, window.innerHeight) / 2 - (wr.top + wr.height / 2);
     gsap.set(group, { y: offset });
     if (dust) dust.build(); // re-sample at the centred position
     root.classList.remove('intro');
@@ -117,77 +207,6 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
     }
   }
 
-  /* ---------- statement: words light up as you read ---------- */
-  document.querySelectorAll<HTMLElement>('[data-scrub-words]').forEach((el) => {
-    const words = el.querySelectorAll('.w');
-    if (!motion) return;
-    gsap.fromTo(
-      words,
-      { opacity: 0.55 },
-      {
-        opacity: 1,
-        ease: 'none',
-        stagger: 0.08,
-        scrollTrigger: { trigger: el, start: 'top 82%', end: 'bottom 52%', scrub: 0.6 },
-      },
-    );
-  });
-
-  /* ---------- pillars: stacked cards recede as the next arrives ---------- */
-  const mm = gsap.matchMedia();
-  mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-    const cards = gsap.utils.toArray<HTMLElement>('.pillar-card');
-    cards.forEach((card, i) => {
-      const next = cards[i + 1];
-      if (!next) return;
-      gsap.to(card.querySelector('.pillar-inner'), {
-        scale: 0.94,
-        opacity: 0.35,
-        ease: 'none',
-        scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true },
-      });
-    });
-
-    /* legacy line drifts sideways with scroll */
-    gsap.utils.toArray<HTMLElement>('[data-drift]').forEach((el) => {
-      const dir = Number(el.dataset.drift) || -1;
-      gsap.fromTo(el, { xPercent: dir > 0 ? -12 : 4 }, { xPercent: dir > 0 ? 4 : -12, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
-    });
-
-    /* featured work: horizontal pinned rail */
-    const rail = document.querySelector<HTMLElement>('[data-rail]');
-    const track = rail?.querySelector<HTMLElement>('.rail-track');
-    if (rail && track) {
-      const dist = () => track.scrollWidth - rail.clientWidth;
-      gsap.to(track, {
-        x: () => -dist(),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: rail,
-          start: 'top top+=' + 0,
-          end: () => '+=' + dist(),
-          pin: true,
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-          onUpdate: (s) => rail.style.setProperty('--p', String(s.progress)),
-        },
-      });
-    }
-  });
-
-  /* ---------- process: active step drives the image stack ---------- */
-  const steps = document.querySelectorAll<HTMLElement>('[data-step]');
-  const frames = document.querySelectorAll<HTMLElement>('[data-step-img]');
-  const bar = document.querySelector<HTMLElement>('[data-step-bar]');
-  const setStep = (n: number) => {
-    steps.forEach((s, i) => s.classList.toggle('is-active', i === n));
-    frames.forEach((f, i) => f.classList.toggle('is-active', i === n));
-    bar?.style.setProperty('--p', String((n + 1) / steps.length));
-  };
-  steps.forEach((s, i) => {
-    ScrollTrigger.create({ trigger: s, start: 'top 60%', end: 'bottom 60%', onToggle: (st) => st.isActive && setStep(i) });
-  });
-
   /* ---------- final CTA: dust gathers into the H mark ---------- */
   const endCanvas = document.querySelector<HTMLCanvasElement>('.end-canvas');
   if (!dustMod && dustPromise) dustMod = await dustPromise;
@@ -212,7 +231,8 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
         });
         end.u.uAlpha.value = 1;
         end.u.uDim.value = 0.75;
-        gsap.ticker.add(end.tick);
+        if (end.renderer.extensions.has('KHR_parallel_shader_compile')) end.renderer.compileAsync(end.scene, end.camera).catch(() => {}).finally(() => gsap.ticker.add(end.tick));
+        else gsap.ticker.add(end.tick);
         ScrollTrigger.create({
           trigger: endCanvas.parentElement,
           start: 'top 85%',
@@ -226,5 +246,4 @@ export async function initHome({ gsap, ScrollTrigger, motionOK }: Ctx) {
     io.observe(endCanvas);
   }
 
-  ScrollTrigger.refresh();
 }

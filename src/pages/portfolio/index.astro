@@ -9,6 +9,7 @@ import Split from '../../components/Split.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { projects, pillars, videos, youtubeEmbed, site } from '../../data/site';
 const films = [
+  { v: videos.brandFilm, img: 'haus-film-poster', label: 'Brand film' },
   { v: videos.showreel, img: 'showreel-poster', label: 'Full creative showreel' },
   { v: videos.productionReel, img: 'auto-mercedes-dubai', label: 'Media & production reel' },
 ];
@@ -32,6 +33,7 @@ const films = [
         </div>
         <span class="label" aria-live="polite" data-filter-count>{projects.length} projects</span>
       </div>
+      <h2 class="sr-only">Projects</h2>
       <div class="work-grid" data-filter-grid>
         {projects.map((p, i) => <ProjectTile project={p} delay={(i % 3) * 80} />)}
       </div>
@@ -49,14 +51,17 @@ const films = [
       </div>
       <div class="films">
         {films.map((f) => (
-          <button class="film-card" type="button" data-reel={youtubeEmbed(f.v)} data-reel-title={f.v.title} data-cursor="Play" data-reveal>
+          <button class="film-card" type="button" data-reel={youtubeEmbed(f.v)} data-reel-title={f.v.title} data-reel-poster={f.v.provider === 'file' ? '/media/img/haus-film-poster-1280.webp' : undefined} data-cursor="Play" data-reveal>
             <span class="media"><Img name={f.img} sizes="(min-width: 760px) 50vw, 100vw" decorative /></span>
             <span class="reel-play" aria-hidden="true"><Icon name="play" /></span>
-            <span class="rail-meta"><span class="label">{f.label}</span><span class="rail-title">{f.v.title.replace('HEKAYA HAUS — ', '').replace(' | Full Creative Showreel', '')}</span></span>
+            <span class="rail-meta"><span class="label">{f.label}</span><span class="rail-title">{f.v.title.replace('HEKAYA HAUS — ', '').replace(' | Full Creative Showreel', '').replace('HekayaHaus — ', '')}</span></span>
           </button>
         ))}
       </div>
-      <p style="margin-top:32px" data-reveal><a class="link-arrow" href={site.socials.youtube} target="_blank" rel="noopener">HekayaHaus on YouTube <Icon name="external" /></a></p>
+      <p class="films-links" data-reveal>
+        <a class="link-arrow" href={site.playlist} target="_blank" rel="noopener">Full film playlist <Icon name="external" /></a>
+        <a class="link-arrow" href={site.socials.youtube} target="_blank" rel="noopener">HekayaHaus on YouTube <Icon name="external" /></a>
+      </p>
     </div>
   </section>
 

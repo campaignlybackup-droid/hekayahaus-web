@@ -6,7 +6,7 @@ import Split from '../../components/Split.astro';
 import Img from '../../components/Img.astro';
 import Icon from '../../components/Icon.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import { pillars, site } from '../../data/site';
+import { pillars, site, helpCards, signature } from '../../data/site';
 const imgs: Record<string, string> = { marketing: 'brand-kofo', performance: 'auto-cockpit', growth: 'tech-isometric-2' };
 ---
 <Base
@@ -22,6 +22,31 @@ const imgs: Record<string, string> = { marketing: 'brand-kofo', performance: 'au
       </nav>
     </Fragment>
   </PageHero>
+
+
+  <section class="section--tight hairline" aria-labelledby="help-title">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>How we can help you</p>
+          <h2 id="help-title" class="h-l" data-reveal style="margin-top:20px">Six specialist teams. <em class="serif accent">One connected Haus.</em></h2>
+        </div>
+        <p class="lead" data-reveal>Explore our full range of creative media &amp; marketing services — video production, social media, CGI &amp; VFX, digital marketing, web development, AI solutions, events and more.</p>
+      </div>
+      <ul class="help-grid" role="list">
+        {helpCards.map((c, i) => (
+          <li data-reveal style={`--delay:${(i % 3) * 70}ms`}>
+            <a class="card help-card" href={c.to}>
+              <span class="num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="h-m">{c.t}</h3>
+              <p>{c.b}</p>
+              <span class="link-arrow">See more<span class="sr-only"> about {c.t}</span> <Icon name="arrow" /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 
   {pillars.map((p, pi) => (
     <section class="section pillar-section" id={p.id} aria-labelledby={`h-${p.id}`}>
@@ -42,7 +67,7 @@ const imgs: Record<string, string> = { marketing: 'brand-kofo', performance: 'au
                   <h3>{s.link ? <a href={s.link}>{s.name}</a> : s.name}</h3>
                   <div class="body-copy">
                     {s.body.map((b) => <p>{b}</p>)}
-                    {s.link && <a class="link-arrow" href={s.link}>Learn more <Icon name="arrow" /></a>}
+                    {s.link && <a class="link-arrow" href={s.link}>Learn more<span class="sr-only"> about {s.name}</span> <Icon name="arrow" /></a>}
                   </div>
                 </li>
               ))}
@@ -53,6 +78,30 @@ const imgs: Record<string, string> = { marketing: 'brand-kofo', performance: 'au
       </div>
     </section>
   ))}
+
+  <section class="section signature" aria-labelledby="sig-title">
+    <div class="container">
+      <div class="sec-head sec-head--split">
+        <div>
+          <p class="eyebrow eyebrow--accent" data-reveal>Signature capabilities</p>
+          <Split id="sig-title" lines={['Stories don’t just', 'happen. We *create them.*']} class="h-xl" />
+        </div>
+        <p class="lead" data-reveal>The specialist craft behind the pillars — in-house, end to end.</p>
+      </div>
+      <ol class="sig-list" role="list">
+        {signature.map((g, i) => (
+          <li data-reveal>
+            <a href={g.to}>
+              <span class="num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="sig-title">{g.t}</span>
+              <span class="sig-body">{g.b}</span>
+              <span class="tile-arrow"><Icon name="arrow" /></span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
 
   <section class="section surface">
     <div class="container">

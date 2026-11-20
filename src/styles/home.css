@@ -6,6 +6,7 @@
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 1fr auto;
   overflow: hidden;
   isolation: isolate;
@@ -61,7 +62,8 @@
 .hero-word {
   display: block;
   white-space: nowrap;
-  font-size: clamp(2rem, 10.3vw, 12.4rem);
+  /* fit the container exactly at every width: word width ≈ 8.95 × font-size */
+  font-size: min(12.4rem, calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 9.25));
   text-shadow: 0 0 60px rgba(255, 179, 92, 0.12);
 }
 .hero-word .ch {
@@ -241,13 +243,15 @@
   aspect-ratio: 16 / 9;
   border-radius: var(--r-l);
 }
-.reel-card .media img {
+.reel-card .media img,
+.reel-card .media video {
   transition:
     transform 1.4s var(--e-out),
     filter 1s;
   filter: saturate(0.9) brightness(0.8);
 }
-.reel-card:hover .media img {
+.reel-card:hover .media img,
+.reel-card:hover .media video {
   transform: scale(1.04);
   filter: saturate(1.05) brightness(0.95);
 }
@@ -422,6 +426,7 @@ a.fi-item:hover {
 }
 .pillar-inner {
   display: grid;
+  backface-visibility: hidden;
   grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(28px, 4vw, 64px);
   min-height: min(80vh, 760px);
@@ -433,6 +438,9 @@ a.fi-item:hover {
   border: 1px solid var(--line);
   box-shadow: 0 -30px 80px -40px rgba(0, 0, 0, 0.9);
   transform-origin: 50% 0;
+}
+.pillar-copy {
+  container-type: inline-size;
 }
 .pillar-top {
   display: flex;
@@ -706,6 +714,23 @@ a.fi-item:hover {
   transform-origin: 0 50%;
   transform: scaleX(var(--p));
 }
+.rail-wrap.is-pinned .rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.rail-wrap.is-pinned .rail-item:not(.rail-film):not(.rail-end) {
+  width: min(28vw, 440px, 50vh);
+}
+.rail-wrap.is-pinned .rail-film {
+  width: min(44vw, 720px, 92vh);
+}
+.rail-wrap.is-pinned .rail-end {
+  width: min(22vw, 340px, 40vh);
+}
 .work-cta {
   padding-top: 48px;
   padding-bottom: var(--section);
@@ -852,7 +877,9 @@ a.fi-item:hover {
   font-family: var(--f-display);
   font-weight: 800;
   font-stretch: 125%;
-  font-size: clamp(2.6rem, 5.4vw, 5.2rem);
+  font-size: clamp(2.1rem, 5.4vw, 5.2rem);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
   line-height: 0.9;
   letter-spacing: -0.05em;
 }
@@ -913,6 +940,7 @@ a.fi-item:hover {
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   padding-block: var(--section);
   overflow: hidden;
@@ -945,4 +973,68 @@ a.fi-item:hover {
 }
 .end-inner .cta-actions {
   justify-content: center;
+}
+
+/* ---------- haus lead + why points (live-site content) ---------- */
+.haus-lead {
+  margin-top: 32px;
+  color: var(--ivory);
+}
+.haus-lead + .haus-body {
+  margin-top: 20px;
+}
+.why-points {
+  margin-top: clamp(56px, 7vw, 100px);
+}
+.why-points-head {
+  max-width: 34ch;
+  text-wrap: balance;
+}
+.why-grid-4 {
+  list-style: none;
+  padding: 0;
+  margin: clamp(28px, 3.4vw, 44px) 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 22px);
+}
+.why-grid-4 .card p {
+  font-size: 0.95rem;
+}
+@media (max-width: 1100px) {
+  .why-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .why-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* label legibility over moving footage */
+.reel-card .media::after,
+.rail-film .media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 6, 8, 0) 45%, rgba(5, 6, 8, 0.78) 100%);
+}
+.reel-card .reel-play,
+.reel-card .reel-label {
+  z-index: 2;
+}
+@media (max-width: 1180px) {
+  .legacy-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  /* the stacked cards scale/fade on scroll: keep each on its own compositor layer */
+  .pillar-inner {
+    will-change: transform, opacity;
+  }
 }

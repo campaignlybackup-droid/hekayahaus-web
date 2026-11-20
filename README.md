@@ -38,6 +38,8 @@ Common tasks:
 
 - **Add a service showreel:** add an entry to `serviceReels` in `src/data/site.ts`, keyed by the service slug, e.g. `'content-marketing-dubai'`. A "Watch the reel" button appears on that service page.
 - **Replace the main showreel:** edit `videos.showreel` in `content.json` (YouTube ID in `ref`).
+- **Brand film:** the HekayaHaus film from the live site is self-hosted. `public/media/video/haus-film-720.mp4` (with sound) plays in the pop-up from *Watch Showreel*. `haus-loop-720.mp4` and `haus-loop-360.mp4` are silent 14-second loops used behind the showreel card; they load only when scrolled into view (360p on phones) and pause offscreen. To swap the film, replace these files and `haus-film-poster-*.webp`.
+- **Live-site content:** `whyChoose`, `signature`, `helpCards` and `moreClients` in `content.json` hold the four "why choose us" points, the six signature capabilities, the six service overview cards, and the further clients named in the brand film.
 - **Case-study detail:** add any of `client`, `brief`, `challenge`, `thinking`, `execution`, `outcome` (strings) to a project in `content.json`. Each section renders only when real, approved copy exists. Never invent results.
 - **Press, exhibition or award logos:** add entries to `featuredIn` in `site.ts`, and put logo files in `public/media/logos/`.
 - **University logos:** add them to `/university-partnerships` only once a partnership is formally established.

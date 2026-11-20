@@ -50,7 +50,7 @@ const ld = [
         </div>
         <div class="media media--parallax" style="aspect-ratio:16/10" data-reveal="scale"><Img name={s.image} sizes="(min-width: 900px) 46vw, 100vw" priority /></div>
       </div>
-      <div class="grid-2" style="margin-top:clamp(40px,5vw,72px)">
+      <div class="grid-2 caps-grid" style="margin-top:clamp(40px,5vw,72px)">
         {s.capabilities.map((c, i) => (
           <div class="card" data-reveal style={`--delay:${(i % 2) * 80}ms`}>
             <span class="num">{String(i + 1).padStart(2, '0')}</span>

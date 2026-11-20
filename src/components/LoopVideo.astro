@@ -1,0 +1,12 @@
+---
+/* Silent ambient loop with a poster. The source is attached only when the element nears
+   the viewport (360p on small screens, 720p otherwise) and pauses offscreen.
+   Reduced motion / Save-Data keep the poster frame. */
+import Img from './Img.astro';
+interface Props { poster: string; sizes?: string; sm?: string; lg?: string }
+const { poster, sizes = '100vw', sm = '/media/video/haus-loop-360.mp4', lg = '/media/video/haus-loop-720.mp4' } = Astro.props;
+---
+<span class="loop-video">
+  <Img name={poster} sizes={sizes} decorative />
+  <video muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" data-loop-video data-sm={sm} data-lg={lg}></video>
+</span>

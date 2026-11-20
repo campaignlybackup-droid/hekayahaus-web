@@ -6,7 +6,8 @@ import Img from '../components/Img.astro';
 import Icon from '../components/Icon.astro';
 import LogoMarquee from '../components/LogoMarquee.astro';
 import Faq from '../components/Faq.astro';
-import { site, pillars, projects, featuredProjectSlugs, processSteps, stats, videos, featuredIn, faq, projectsByPillar, youtubeEmbed } from '../data/site';
+import LoopVideo from '../components/LoopVideo.astro';
+import { site, pillars, projects, featuredProjectSlugs, processSteps, stats, videos, featuredIn, faq, projectsByPillar, youtubeEmbed, whyChoose } from '../data/site';
 import '../styles/home.css';
 
 const featured = featuredProjectSlugs.map((s) => projects.find((p) => p.slug === s)!).filter(Boolean);
@@ -50,7 +51,7 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
           </p>
           <div class="hero-ctas" data-hero-late>
             <Button href={site.calendar}>Book a Discovery Call</Button>
-            <button class="btn btn--ghost" type="button" data-reel={youtubeEmbed(videos.showreel)} data-reel-title={videos.showreel.title} data-magnetic>
+            <button class="btn btn--ghost" type="button" data-reel={videos.brandFilm.ref} data-reel-title="HekayaHaus — Showreel" data-reel-poster="/media/img/haus-film-poster-1280.webp" data-magnetic>
               <span>Watch Showreel</span><span class="btn-icon"><Icon name="play" /></span>
             </button>
           </div>
@@ -88,13 +89,14 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
         <button
           class="reel-card"
           type="button"
-          data-reel={youtubeEmbed(videos.showreel)}
-          data-reel-title={videos.showreel.title}
+          data-reel={videos.brandFilm.ref}
+          data-reel-title="HekayaHaus — Showreel"
+          data-reel-poster="/media/img/haus-film-poster-1280.webp"
           data-cursor="Play"
           data-reveal="scale"
           aria-label="Watch the HekayaHaus showreel"
         >
-          <span class="media"><Img name="showreel-poster" sizes="(min-width: 1024px) 60vw, 100vw" decorative /></span>
+          <span class="media"><LoopVideo poster="haus-film-poster" sizes="(min-width: 1024px) 60vw, 100vw" /></span>
           <span class="reel-play" aria-hidden="true"><Icon name="play" /></span>
           <span class="reel-label"><span class="label">Watch</span><span class="h-m">Showreel</span></span>
         </button>
@@ -139,6 +141,7 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
         <div class="haus-copy">
           <p class="eyebrow eyebrow--accent" data-reveal>The Haus</p>
           <Split id="haus-title" lines={['Not an agency.', 'A Haus you can', '*actually trust.*']} class="h-xl" />
+          <p class="lead haus-lead" data-reveal>{site.notAnAgency}</p>
           <div class="body-copy haus-body" data-reveal>
             <p>Most founders we meet carry the same quiet frustration. They’ve been burned before, overpromised, under-delivered, or left with beautiful work that never moved the numbers.</p>
             <p>We built HekayaHaus to end that cycle.</p>
@@ -253,6 +256,7 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
           </div>
         </div>
       </div>
+      <div class="rail-wrap" data-rail-wrap>
       <div class="rail" data-rail>
         <div class="rail-track">
           <button class="rail-item rail-film" type="button" data-reel={youtubeEmbed(videos.showreel)} data-reel-title={videos.showreel.title} data-cursor="Play">
@@ -281,6 +285,7 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
           </a>
         </div>
         <div class="rail-progress" aria-hidden="true"><span></span></div>
+      </div>
       </div>
       <div class="container work-cta" data-reveal>
         <Button href="/portfolio">Explore Our Portfolio</Button>
@@ -360,6 +365,18 @@ const pillarImages: Record<string, string> = { marketing: 'brand-kofo', performa
         </div>
       </div>
       <div class="container">
+        <div class="why-points">
+          <p class="why-points-head h-m" data-reveal>Your brand deserves campaigns that don’t just market — but <em class="serif accent">actually connect with people.</em></p>
+          <ul class="why-grid-4" role="list">
+            {whyChoose.map((w, i) => (
+              <li class="card" data-reveal style={`--delay:${i * 80}ms`}>
+                <span class="num">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="h-m">{w.t}</h3>
+                <p>{w.b}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
         <blockquote class="why-quote" data-reveal>
           <p>Your ambition deserves more than another service provider. It deserves a partner who <em class="serif accent">sees the bigger picture.</em></p>
         </blockquote>

@@ -19,7 +19,7 @@ import Icon from './Icon.astro';
         </div>
       </div>
       <div>
-        <h3 class="label">Explore</h3>
+        <h2 class="label">Explore</h2>
         <ul>
           <li><a href="/portfolio">Portfolio</a></li>
           <li><a href="/what-we-do">What We Do</a></li>
@@ -27,13 +27,13 @@ import Icon from './Icon.astro';
           <li><a href="/blogs">Insights</a></li>
           <li><a href="/contact-us">Contact</a></li>
         </ul>
-        <h3 class="label" style="margin-top:32px">Join the Haus</h3>
+        <h2 class="label" style="margin-top:32px">Join the Haus</h2>
         <ul>
           {nav.join.items.map((i) => <li><a href={i.href}>{i.label.replace(' — Join the Haus', '')}</a></li>)}
         </ul>
       </div>
       <div>
-        <h3 class="label">Capabilities</h3>
+        <h2 class="label">Capabilities</h2>
         <ul>
           {pillars.map((p) => <li><a href={p.route}>{p.n} — {p.name}</a></li>)}
           <li><a href="/media-production-dubai">Media Production</a></li>
@@ -45,7 +45,7 @@ import Icon from './Icon.astro';
         </ul>
       </div>
       <div class="footer-contact">
-        <h3 class="label">Get in touch</h3>
+        <h2 class="label">Get in touch</h2>
         <p>Have a project, an ambition or a challenge worth discussing?</p>
         <a href={`mailto:${site.email}`}>{site.email}</a>
         <a href={site.whatsappUrl} target="_blank" rel="noopener">{site.whatsappDisplay}</a>

@@ -6,7 +6,7 @@ import Img from '../components/Img.astro';
 import Icon from '../components/Icon.astro';
 import LogoMarquee from '../components/LogoMarquee.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { featuredIn, site } from '../data/site';
+import { featuredIn, site, moreClients } from '../data/site';
 const beliefs = [
   { t: 'People before platforms.', b: 'Behind every business is a person who has taken a risk, invested time and built something they believe in. We never lose sight of that.' },
   { t: 'Creativity needs direction.', b: 'Beautiful work has its place. But when creativity meets purpose, it becomes far more powerful.' },
@@ -91,6 +91,7 @@ const beliefs = [
         </div>
       </div>
       <div style="margin-top:clamp(48px,6vw,88px)" data-reveal><LogoMarquee label="Selected collaborations" /></div>
+      <p class="more-clients" data-reveal><span class="label">Also trusted by</span> {moreClients.join(' · ')} <span class="more-clients-tail">— and brands across the UAE, India and beyond.</span></p>
     </div>
   </section>
 
